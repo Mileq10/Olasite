@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galeria | Obiektyw na Szczęście</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header class="site-header" id="site-header">
+    <div class="site-header-inner">
+      <a href="index.html" class="logo" aria-label="Obiektyw na Szczęście — do góry strony">
+        <span>OBIEKTYW NA SZCZĘŚCIE</span>
+      </a>
+      <nav class="navbar" id="site-nav">
+        <ul class="nav-links">
+          <li><a href="index.html#portfolio">Portfolio</a></li>
+          <li><a href="index.html#oferta">Oferta</a></li>
+          <li><a href="index.html#o-mnie">O mnie</a></li>
+          <li><a href="index.html#kontakt">Kontakt</a></li>
+        </ul>
+      </nav>
+      <button class="nav-toggle" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Otwórz menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <button class="nav-backdrop" type="button" aria-label="Zamknij menu" hidden></button>
+  </header>
+
+  <main class="gallery-page">
+    <div class="section-inner">
+      <a class="gallery-back" id="gallery-back" href="index.html#portfolio">← Wróć do kategorii</a>
+      <h1 id="gallery-title">Galeria</h1>
+      <div id="gallery-content"></div>
+
+      <section class="more-photos">
+        <h2>Więcej zdjęć?</h2>
+        <p>Kolejne realizacje wrzucam na Instagram — zajrzyj, jeśli chcesz zobaczyć więcej kadrów.</p>
+        <a class="instagram-link more-photos-link" href="https://www.instagram.com/obiektywna.szczescie/" target="_blank" rel="noopener noreferrer">
+          <svg class="instagram-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="currentColor" d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zM17.5 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+          </svg>
+          <span>@obiektywna.szczescie</span>
+        </a>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="section-inner footer-grid">
+      <div class="footer-brand">
+        <p class="footer-logo">OBIEKTYW NA SZCZĘŚCIE</p>
+        <p>Fotografia portretowa, biznesowa i reportażowa. Administrator danych: Obiektyw na Szczęście.</p>
+      </div>
+      <div>
+        <p class="block-label">Nawigacja</p>
+        <ul class="footer-links">
+          <li><a href="index.html#portfolio">Portfolio</a></li>
+          <li><a href="index.html#oferta">Oferta</a></li>
+          <li><a href="index.html#o-mnie">O mnie</a></li>
+          <li><a href="index.html#kontakt">Kontakt</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="block-label">Kontakt</p>
+        <ul class="footer-links">
+          <li><a href="tel:+48500100200">+48 500 100 200</a></li>
+          <li><a href="mailto:obiektywna.szczescie@gmail.com">obiektywna.szczescie@gmail.com</a></li>
+          <li><a href="https://www.instagram.com/obiektywna.szczescie/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="block-label">Informacje</p>
+        <ul class="footer-links">
+          <li><a href="polityka-prywatnosci.html">Polityka prywatności</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="section-inner">
+        <p>© 2026 Obiektyw na Szczęście. Wszelkie prawa zastrzeżone. Zdjęcia chronione prawem autorskim. Strona nie wykorzystuje plików cookies analitycznych.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // PODMIANA ZDJĘĆ GALERII:
+    // 1. Wrzuć pliki do zdjecia/portfolio/<nazwa-kategorii>/
+    // 2. okladka.jpg = miniaturka (strona główna / hub reportaży)
+    // 3. 01.jpg, 02.jpg... = zdjęcia w galerii (serwer wczyta wszystkie oprócz okladka)
+    // 4. Po wrzuceniu nowych plików odśwież stronę — lista buduje się automatycznie.
+
+    const galleries = {
+      biznesowa: { title: 'Sesja biznesowa', folder: 'biznesowa' },
+      portretowa: { title: 'Sesja portretowa', folder: 'portretowa' },
+      wydarzenia: {
+        title: 'Reportaże z wydarzeń',
+        type: 'hub',
+        children: [
+          { key: 'slubne', title: 'Ślubne', image: 'zdjecia/portfolio/slubne/okladka.jpg' },
+          { key: 'komunie', title: 'Komunie', image: 'zdjecia/portfolio/komunie/okladka.jpg' },
+          { key: 'eventy-sport', title: 'Eventy i Sport', image: 'zdjecia/portfolio/eventy-sport/okladka.jpg' }
+        ]
+      },
+      slubne: { title: 'Ślubne', parent: 'wydarzenia', folder: 'slubne' },
+      komunie: { title: 'Komunie', parent: 'wydarzenia', folder: 'komunie' },
+      'eventy-sport': { title: 'Eventy i Sport', parent: 'wydarzenia', folder: 'eventy-sport' },
+      eventy: { title: 'Eventy', parent: 'wydarzenia', folder: 'eventy' },
+      sport: { title: 'Sport', parent: 'wydarzenia', folder: 'sport' }
+    };
+
+    const key = new URLSearchParams(window.location.search).get('kategoria');
+    const gallery = galleries[key] || galleries.biznesowa;
+    const content = document.getElementById('gallery-content');
+    const back = document.getElementById('gallery-back');
+
+    document.getElementById('gallery-title').textContent = gallery.title;
+    document.title = gallery.title + ' | Obiektyw na Szczęście';
+
+    if (gallery.parent) {
+      back.href = 'galeria.html?kategoria=' + gallery.parent;
+      back.textContent = '← Wróć do reportaży';
+    }
+
+    function renderPhotos(photos) {
+      if (!photos.length) {
+        content.innerHTML = '<p class="section-lead">Brak zdjęć w folderze. Wrzuć pliki do zdjecia/portfolio/' + gallery.folder + '/</p>';
+        return;
+      }
+      content.innerHTML = '<div class="photos-grid">' + photos.map(function (photo) {
+        return '<img src="' + photo.src + '" alt="' + photo.alt + '">';
+      }).join('') + '</div>';
+    }
+
+    if (gallery.type === 'hub') {
+      content.innerHTML = '<div class="categories-grid">' + gallery.children.map(function (child) {
+        return (
+          '<article class="category-card">' +
+            '<a href="galeria.html?kategoria=' + child.key + '" class="category-image">' +
+              '<img src="' + child.image + '" alt="' + child.title + '">' +
+              '<span class="category-caption">' +
+                '<span class="category-name">' + child.title + '</span>' +
+                '<span class="category-hint">Zobacz galerię</span>' +
+              '</span>' +
+            '</a>' +
+          '</article>'
+        );
+      }).join('') + '</div>';
+    } else {
+      const folder = gallery.folder;
+      const immediate = [];
+      for (let i = 1; i <= 20; i++) {
+        const n = String(i).padStart(2, '0');
+        immediate.push({ src: 'zdjecia/portfolio/' + folder + '/' + n + '.jpg', alt: gallery.title + ' ' + n });
+      }
+      renderPhotos(immediate);
+
+      fetch('/api/galeria?kategoria=' + encodeURIComponent(folder))
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          if (data.photos && data.photos.length) renderPhotos(data.photos);
+        })
+        .catch(function () {});
+    }
+  </script>
+  <script src="nav.js?v=3"></script>
+</body>
+</html>

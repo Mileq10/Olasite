@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Obiektyw na Szczęście</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Elegancki font szeryfowy zbliżony do projektu -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!--
+    Szybka podmiana treści:
+    - Zdjęcia: folder zdjecia/ (opis w zdjecia/CZYTAJ.txt)
+    - Tło hero: zdjecia/hero/tlo.jpg (ścieżka w style.css przy .hero-section)
+    - Ceny pakietów: sekcja #oferta w tym pliku
+    - Telefon / Instagram: sekcja #kontakt
+    Formularz działa po uruchomieniu: npm start
+    Zgłoszenia idą na mail: obiektywna.szczescie@gmail.com
+    Kopia zapisuje się w folderze zgloszenia/
+  -->
+
+  <header class="site-header" id="site-header">
+    <div class="site-header-inner">
+      <a href="index.html" class="logo" aria-label="Obiektyw na Szczęście — do góry strony">
+        <span>OBIEKTYW NA SZCZĘŚCIE</span>
+      </a>
+      <nav class="navbar" id="site-nav">
+        <ul class="nav-links">
+          <li><a href="index.html#portfolio">Portfolio</a></li>
+          <li><a href="index.html#oferta">Oferta</a></li>
+          <li><a href="index.html#o-mnie">O mnie</a></li>
+          <li><a href="index.html#kontakt">Kontakt</a></li>
+        </ul>
+      </nav>
+      <button class="nav-toggle" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Otwórz menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <button class="nav-backdrop" type="button" aria-label="Zamknij menu" hidden></button>
+  </header>
+
+  <section class="hero-section" id="home">
+    <!-- Przyciemnienie i tło strony -->
+    <div class="hero-overlay"></div>
+
+    <div class="container">
+      <div class="hero-content">
+        <!-- Lewa kolumna: teksty i przyciski -->
+        <div class="hero-text">
+          <h1>Przeżywaj wspaniałe chwile, i pozwól mi je uwiecznić.</h1>
+          <p>
+            To jest tekst placeholderowy aby zapełnić trochę przestrzeni i pokazać jak mogłoby to wyglądać gdyby np było tu coś o typie sesji i dlaczego akurat ktoś chciałby wykupić u ciebie tą sesję, wiesz o co chodzi.
+          </p>
+          <div class="hero-buttons">
+            <a href="#kontakt" class="btn btn-primary">Umów się na sesję</a>
+            <a href="#portfolio" class="btn btn-secondary">Zobacz więcej zdjęć</a>
+          </div>
+        </div>
+
+        <!-- Prawa kolumna: galeria kafelkowa
+             PODMIANA: zdjecia/hero/1.jpg, 2.jpg, 3.jpg -->
+        <div class="hero-gallery">
+          <div class="gallery-item item-1">
+            <img src="zdjecia/hero/1.jpg" alt="Sesja rodzinna">
+          </div>
+          <div class="gallery-item item-2">
+            <img src="zdjecia/hero/2.jpg" alt="Portret kobiety">
+          </div>
+          <div class="gallery-item item-3">
+            <img src="zdjecia/hero/3.jpg" alt="Kobieta w ogrodzie">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="categories-section" id="portfolio">
+    <div class="section-inner">
+      <h2 class="section-title">Portfolio</h2>
+      <p class="section-lead">Wybierz kategorię, żeby zobaczyć zdjęcia z sesji i reportaży.</p>
+
+      <div class="portfolio-block">
+        <p class="block-label">Kategorie sesji</p>
+        <div class="categories-grid">
+          <!-- PODMIANA OKŁADEK: zdjecia/portfolio/<kategoria>/okladka.jpg -->
+          <article class="category-card">
+            <a href="galeria.html?kategoria=biznesowa" class="category-image">
+              <img src="zdjecia/portfolio/biznesowa/okladka.jpg" alt="Sesja biznesowa">
+              <span class="category-caption">
+                <span class="category-name">Sesja biznesowa</span>
+                <span class="category-hint">Zobacz galerię</span>
+              </span>
+            </a>
+          </article>
+
+          <article class="category-card">
+            <a href="galeria.html?kategoria=portretowa" class="category-image">
+              <img src="zdjecia/portfolio/portretowa/okladka.jpg" alt="Sesja portretowa">
+              <span class="category-caption">
+                <span class="category-name">Sesja portretowa</span>
+                <span class="category-hint">Zobacz galerię</span>
+              </span>
+            </a>
+          </article>
+
+          <article class="category-card">
+            <a href="galeria.html?kategoria=wydarzenia" class="category-image">
+              <img src="zdjecia/portfolio/wydarzenia/okladka.jpg" alt="Reportaże z wydarzeń">
+              <span class="category-caption">
+                <span class="category-name">Reportaże z wydarzeń</span>
+                <span class="category-hint">Zobacz galerię</span>
+              </span>
+            </a>
+          </article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section offer-section" id="oferta">
+    <div class="section-inner">
+      <h2 class="section-title">Oferta</h2>
+      <p class="section-lead">Stałe pakiety na sesje portretowe i biznesowe. Reportaże wyceniam indywidualnie w podanych widełkach.</p>
+
+      <!-- Ceny i opisy pakietów edytujesz w kartach poniżej (klasa .offer-price i listy <li>) -->
+      <div class="offer-category">
+        <button type="button" class="offer-category-head" aria-expanded="false">
+          <span class="block-label">Portret</span>
+          <span class="offer-category-title">Sesja portretowa</span>
+          <span class="offer-toggle" aria-hidden="true"></span>
+        </button>
+        <div class="offer-category-body">
+        <div class="offer-grid">
+          <article class="offer-card">
+            <p class="block-label">Mini</p>
+            <p class="offer-price">400 zł</p>
+            <ul>
+              <li>1 godzina zdjęć</li>
+              <li>15 wyretuszowanych zdjęć</li>
+              <li>1 lokalizacja</li>
+              <li>Galeria online</li>
+            </ul>
+            <a href="#kontakt" class="btn btn-secondary js-fill-form" data-tematyka="portretowa" data-pakiet="mini">
+              <span class="btn-text-long">Zapytaj o ten pakiet</span>
+              <span class="btn-text-short">Wybierz</span>
+            </a>
+          </article>
+
+          <article class="offer-card offer-card--featured">
+            <span class="offer-badge">Najczęściej wybierany</span>
+            <p class="block-label">Standard</p>
+            <p class="offer-price">750 zł</p>
+            <ul>
+              <li>2 godziny zdjęć</li>
+              <li>40 wyretuszowanych zdjęć</li>
+              <li>Do 2 lokalizacji</li>
+              <li>Konsultacja stylizacji</li>
+            </ul>
+            <a href="#kontakt" class="btn btn-primary js-fill-form" data-tematyka="portretowa" data-pakiet="standard">
+              <span class="btn-text-long">Zapytaj o ten pakiet</span>
+              <span class="btn-text-short">Wybierz</span>
+            </a>
+          </article>
+
+          <article class="offer-card">
+            <p class="block-label">Premium</p>
+            <p class="offer-price">1200 zł</p>
+            <ul>
+              <li>3 godziny zdjęć</li>
+              <li>80 wyretuszowanych zdjęć</li>
+              <li>Kilka aranżacji</li>
+              <li>Priorytetowa edycja</li>
+            </ul>
+            <a href="#kontakt" class="btn btn-secondary js-fill-form" data-tematyka="portretowa" data-pakiet="premium">
+              <span class="btn-text-long">Zapytaj o ten pakiet</span>
+              <span class="btn-text-short">Wybierz</span>
+            </a>
+          </article>
+        </div>
+        </div>
+      </div>
+
+      <div class="offer-category">
+        <button type="button" class="offer-category-head" aria-expanded="false">
+          <span class="block-label">Biznes</span>
+          <span class="offer-category-title">Sesja biznesowa</span>
+          <span class="offer-toggle" aria-hidden="true"></span>
+        </button>
+        <div class="offer-category-body">
+        <div class="offer-grid">
+          <article class="offer-card">
+            <p class="block-label">Mini</p>
+            <p class="offer-price">450 zł</p>
+            <ul>
+              <li>1 godzina zdjęć</li>
+              <li>10 zdjęć do LinkedIn / strony</li>
+              <li>1 tło lub lokalizacja</li>
+              <li>Wersje kolor i czarno-białe</li>
+            </ul>
+            <a href="#kontakt" class="btn btn-secondary js-fill-form" data-tematyka="biznesowa" data-pakiet="mini">
+              <span class="btn-text-long">Zapytaj o ten pakiet</span>
+              <span class="btn-text-short">Wybierz</span>
+            </a>
+          </article>
+
+          <article class="offer-card offer-card--featured">
+            <span class="offer-badge">Najczęściej wybierany</span>
+            <p class="block-label">Standard</p>
+            <p class="offer-price">850 zł</p>
+            <ul>
+              <li>2 godziny zdjęć</li>
+              <li>30 zdjęć indywidualnych lub zespołowych</li>
+              <li>2 aranżacje</li>
+              <li>Pliki do druku i social mediów</li>
+            </ul>
+            <a href="#kontakt" class="btn btn-primary js-fill-form" data-tematyka="biznesowa" data-pakiet="standard">
+              <span class="btn-text-long">Zapytaj o ten pakiet</span>
+              <span class="btn-text-short">Wybierz</span>
+            </a>
+          </article>
+
+          <article class="offer-card">
+            <p class="block-label">Premium</p>
+            <p class="offer-price">1400 zł</p>
+            <ul>
+              <li>3 godziny zdjęć</li>
+              <li>60 zdjęć marki / zespołu</li>
+              <li>Kilka lokalizacji</li>
+              <li>Konsultacja wizerunkowa</li>
+            </ul>
+            <a href="#kontakt" class="btn btn-secondary js-fill-form" data-tematyka="biznesowa" data-pakiet="premium">
+              <span class="btn-text-long">Zapytaj o ten pakiet</span>
+              <span class="btn-text-short">Wybierz</span>
+            </a>
+          </article>
+        </div>
+        </div>
+      </div>
+
+      <div class="offer-category">
+        <button type="button" class="offer-category-head" aria-expanded="false">
+          <span class="block-label">Reportaże</span>
+          <span class="offer-category-title">Reportaże z wydarzeń</span>
+          <span class="offer-toggle" aria-hidden="true"></span>
+        </button>
+        <div class="offer-category-body">
+        <div class="offer-grid offer-grid--ranges">
+          <article class="offer-card">
+            <p class="block-label">Ślubne</p>
+            <p class="offer-price">2800–8500 zł</p>
+            <p class="offer-note">Widełki cenowe</p>
+            <ul>
+              <li>Przygotowania, ceremonia, wesele</li>
+              <li>Zakres ustalany indywidualnie</li>
+              <li>Galeria online dla gości</li>
+            </ul>
+            <a href="#kontakt" class="btn btn-secondary js-fill-form" data-tematyka="slubne" data-pakiet="indywidualna">
+              <span class="btn-text-long">Zapytaj o wycenę</span>
+              <span class="btn-text-short">Wycena</span>
+            </a>
+          </article>
+
+          <article class="offer-card offer-card--featured">
+            <span class="offer-badge">Popularne</span>
+            <p class="block-label">Komunie</p>
+            <p class="offer-price">800–2000 zł</p>
+            <p class="offer-note">Widełki cenowe</p>
+            <ul>
+              <li>Uroczystość i przyjęcie</li>
+              <li>Zdjęcia rodzinne i reportaż</li>
+              <li>Czas trwania do uzgodnienia</li>
+            </ul>
+            <a href="#kontakt" class="btn btn-primary js-fill-form" data-tematyka="komunie" data-pakiet="indywidualna">
+              <span class="btn-text-long">Zapytaj o wycenę</span>
+              <span class="btn-text-short">Wycena</span>
+            </a>
+          </article>
+
+          <article class="offer-card">
+            <p class="block-label">Eventy</p>
+            <p class="offer-price">700–2500 zł</p>
+            <p class="offer-note">Widełki cenowe</p>
+            <ul>
+              <li>Konferencje, imprezy, gale</li>
+              <li>Cena zależy od długości wydarzenia</li>
+              <li>Zdjęcia do publikacji</li>
+            </ul>
+            <a href="#kontakt" class="btn btn-secondary js-fill-form" data-tematyka="eventy" data-pakiet="indywidualna">
+              <span class="btn-text-long">Zapytaj o wycenę</span>
+              <span class="btn-text-short">Wycena</span>
+            </a>
+          </article>
+
+          <article class="offer-card">
+            <p class="block-label">Sport</p>
+            <p class="offer-price">600–2200 zł</p>
+            <p class="offer-note">Widełki cenowe</p>
+            <ul>
+              <li>Zawody, mecze, relacje</li>
+              <li>Cena zależy od miejsca i czasu</li>
+              <li>Kadry do mediów i social mediów</li>
+            </ul>
+            <a href="#kontakt" class="btn btn-secondary js-fill-form" data-tematyka="sport" data-pakiet="indywidualna">
+              <span class="btn-text-long">Zapytaj o wycenę</span>
+              <span class="btn-text-short">Wycena</span>
+            </a>
+          </article>
+        </div>
+        <p class="offer-disclaimer">
+          Podane kwoty to orientacyjne widełki, a nie stały cennik. Ostateczna wycena jest zawsze indywidualna
+          i zależy od podkategorii, liczby godzin, liczby fotografów, lokalizacji oraz zakresu zdjęć.
+          Po krótkiej rozmowie przygotuję konkretną ofertę.
+        </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section about-section" id="o-mnie">
+    <div class="section-inner">
+      <h2 class="section-title">O mnie</h2>
+      <p class="section-lead">Kilka słów o tym, kto stoi za obiektywem.</p>
+
+      <div class="about-grid">
+        <figure class="about-photo">
+          <!-- PODMIANA: zdjecia/o-mnie/portret.jpg -->
+          <img src="zdjecia/o-mnie/portret.jpg" alt="Fotografka z aparatem">
+        </figure>
+        <div class="about-text">
+          <p class="block-label">Obiektyw na Szczęście</p>
+          <h3>Uwieczniam chwile, które chcesz zapamiętać.</h3>
+          <p>
+            Kocham naturalne światło, szczere emocje i zdjęcia, które nie pozują — tylko opowiadają historię.
+            Pracuję spokojnie, bez pośpiechu, tak żebyście mogli być sobą przed aparatem.
+          </p>
+          <p>
+            Robię sesje biznesowe, portretowe i reportaże z wydarzeń. Każde zlecenie traktuję indywidualnie:
+            od rozmowy o oczekiwaniach, przez zdjęcia, aż po starannie wybrane kadry gotowe do publikacji.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section contact-section" id="kontakt">
+    <div class="section-inner">
+      <h2 class="section-title">Kontakt</h2>
+      <p class="section-lead">Napisz, jaki rodzaj sesji Cię interesuje — odezwę się z propozycją terminu.</p>
+
+      <div class="contact-grid">
+        <form class="contact-form" id="contact-form" autocomplete="off">
+          <label class="form-field">
+            <span>Tematyka zdjęć</span>
+            <select name="tematyka" id="tematyka" required>
+              <option value="" disabled selected>Wybierz kategorię</option>
+              <option value="portretowa">Sesja portretowa</option>
+              <option value="biznesowa">Sesja biznesowa</option>
+              <optgroup label="Reportaże z wydarzeń">
+                <option value="slubne">Ślubne</option>
+                <option value="komunie">Komunijne</option>
+                <option value="eventy">Eventy</option>
+                <option value="sport">Sport</option>
+              </optgroup>
+            </select>
+          </label>
+
+          <label class="form-field">
+            <span>Pakiet</span>
+            <select name="pakiet" id="pakiet" required disabled>
+              <option value="" disabled selected>Najpierw wybierz tematykę</option>
+            </select>
+          </label>
+
+          <label class="form-field">
+            <span>Numer telefonu (opcjonalnie)</span>
+            <div class="phone-input">
+              <span class="phone-prefix">+48</span>
+              <input type="tel" name="telefon" id="telefon" inputmode="numeric" autocomplete="tel-national" maxlength="9" pattern="[0-9]{9}" placeholder="123 456 789" title="Podaj 9 cyfr albo zostaw puste">
+            </div>
+          </label>
+          <p class="form-hint">Numer telefonu jest opcjonalny, ale ułatwi kontakt i dogadanie oferty. Wpisz 9 cyfr — kierunkowy +48 jest stały.</p>
+
+          <label class="form-field">
+            <span>Wiadomość</span>
+            <textarea name="wiadomosc" rows="5" required placeholder="Napisz, czego potrzebujesz i jaki termin Ci pasuje."></textarea>
+          </label>
+
+          <label class="form-check">
+            <input type="checkbox" name="rodo" required>
+            <span>
+              Wyrażam zgodę na przetwarzanie moich danych osobowych w celu odpowiedzi na zapytanie
+              zgodnie z <a href="polityka-prywatnosci.html">Polityką prywatności</a>.
+            </span>
+          </label>
+
+          <button type="submit" class="btn btn-primary" id="form-submit">Wyślij zapytanie</button>
+          <p class="form-success" id="form-success" hidden>Dziękuję. Zapytanie zostało wysłane — odezwę się tak szybko, jak to możliwe.</p>
+          <p class="form-error" id="form-error" hidden></p>
+
+          <p class="rodo-note">
+            Administratorem danych jest Obiektyw na Szczęście. Przetwarzamy tematykę, pakiet i treść wiadomości,
+            a numer telefonu tylko jeśli go podasz. Dane służą obsłudze zapytania. Masz prawo dostępu do danych,
+            ich sprostowania, usunięcia, ograniczenia przetwarzania oraz wniesienia sprzeciwu.
+            Podanie wiadomości jest niezbędne do kontaktu zwrotnego. Szczegóły znajdziesz w
+            <a href="polityka-prywatnosci.html">Polityce prywatności</a>.
+          </p>
+        </form>
+
+        <aside class="contact-aside">
+          <div class="contact-card contact-card--phone">
+            <p class="block-label">Telefon</p>
+            <a href="tel:+48500100200">+48 500 100 200</a>
+          </div>
+          <div class="contact-card contact-card--instagram">
+            <p class="block-label">Instagram</p>
+            <a class="instagram-link" href="https://www.instagram.com/obiektywna.szczescie/" target="_blank" rel="noopener noreferrer">
+              <svg class="instagram-icon" viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="currentColor" d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5A4.25 4.25 0 0 0 7.75 20.5h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5A4.25 4.25 0 0 0 16.25 3.5h-8.5zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7zM17.5 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+              </svg>
+              <span>@obiektywna.szczescie</span>
+            </a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="section-inner footer-grid">
+      <div class="footer-brand">
+        <p class="footer-logo">OBIEKTYW NA SZCZĘŚCIE</p>
+        <p>Fotografia portretowa, biznesowa i reportażowa. Administrator danych: Obiektyw na Szczęście.</p>
+      </div>
+      <div>
+        <p class="block-label">Nawigacja</p>
+        <ul class="footer-links">
+          <li><a href="index.html#portfolio">Portfolio</a></li>
+          <li><a href="index.html#oferta">Oferta</a></li>
+          <li><a href="index.html#o-mnie">O mnie</a></li>
+          <li><a href="index.html#kontakt">Kontakt</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="block-label">Kontakt</p>
+        <ul class="footer-links">
+          <li><a href="tel:+48500100200">+48 500 100 200</a></li>
+          <li><a href="mailto:obiektywna.szczescie@gmail.com">obiektywna.szczescie@gmail.com</a></li>
+          <li><a href="https://www.instagram.com/obiektywna.szczescie/" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="block-label">Informacje</p>
+        <ul class="footer-links">
+          <li><a href="polityka-prywatnosci.html">Polityka prywatności</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="section-inner">
+        <p>© 2026 Obiektyw na Szczęście. Wszelkie prawa zastrzeżone. Zdjęcia chronione prawem autorskim. Strona nie wykorzystuje plików cookies analitycznych.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const tematykaSelect = document.getElementById('tematyka');
+    const pakietSelect = document.getElementById('pakiet');
+    const reportageKeys = ['slubne', 'komunie', 'eventy', 'sport'];
+
+    function updatePakietOptions() {
+      const tematyka = tematykaSelect.value;
+      pakietSelect.classList.remove('is-prefilled');
+
+      if (!tematyka) {
+        pakietSelect.innerHTML = '<option value="" disabled selected>Najpierw wybierz tematykę</option>';
+        pakietSelect.disabled = true;
+        return;
+      }
+
+      pakietSelect.disabled = false;
+      const isReportage = reportageKeys.indexOf(tematyka) !== -1;
+      if (isReportage) {
+        pakietSelect.innerHTML = '<option value="indywidualna" selected>Wycena indywidualna</option>';
+      } else {
+        pakietSelect.innerHTML =
+          '<option value="" disabled selected>Wybierz pakiet</option>' +
+          '<option value="mini">Pakiet Mini</option>' +
+          '<option value="standard">Pakiet Standard</option>' +
+          '<option value="premium">Pakiet Premium</option>';
+      }
+    }
+
+    tematykaSelect.addEventListener('change', updatePakietOptions);
+    updatePakietOptions();
+
+    function fillForm(tematyka, pakiet) {
+      if (!tematyka) return;
+      tematykaSelect.value = tematyka;
+      updatePakietOptions();
+      if (pakiet && pakietSelect.querySelector('option[value="' + pakiet + '"]')) {
+        pakietSelect.value = pakiet;
+      }
+      tematykaSelect.classList.add('is-prefilled');
+      pakietSelect.classList.add('is-prefilled');
+    }
+
+    document.querySelectorAll('.js-fill-form').forEach(function (button) {
+      button.addEventListener('click', function () {
+        fillForm(button.getAttribute('data-tematyka'), button.getAttribute('data-pakiet'));
+      });
+    });
+
+    const offerMedia = window.matchMedia('(max-width: 900px)');
+    const offerCategories = document.querySelectorAll('.offer-category');
+
+    function closeOfferCategories() {
+      offerCategories.forEach(function (category) {
+        category.classList.remove('is-open');
+        const head = category.querySelector('.offer-category-head');
+        if (head) head.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    offerCategories.forEach(function (category) {
+      const head = category.querySelector('.offer-category-head');
+      if (!head) return;
+      head.addEventListener('click', function () {
+        if (!offerMedia.matches) return;
+        const isOpen = category.classList.contains('is-open');
+        closeOfferCategories();
+        if (!isOpen) {
+          category.classList.add('is-open');
+          head.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+
+    const telefonInput = document.getElementById('telefon');
+    telefonInput.addEventListener('input', function () {
+      telefonInput.value = telefonInput.value.replace(/\D/g, '').slice(0, 9);
+    });
+
+    document.getElementById('contact-form').addEventListener('submit', async function (event) {
+      event.preventDefault();
+      const success = document.getElementById('form-success');
+      const errorBox = document.getElementById('form-error');
+      const submitBtn = document.getElementById('form-submit');
+      success.hidden = true;
+      errorBox.hidden = true;
+
+      const digits = telefonInput.value.replace(/\D/g, '');
+      if (!tematykaSelect.value) {
+        errorBox.textContent = 'Najpierw wybierz tematykę zdjęć.';
+        errorBox.hidden = false;
+        tematykaSelect.focus();
+        return;
+      }
+      if (!pakietSelect.value || pakietSelect.disabled) {
+        errorBox.textContent = 'Wybierz pakiet.';
+        errorBox.hidden = false;
+        pakietSelect.focus();
+        return;
+      }
+      if (digits && digits.length !== 9) {
+        errorBox.textContent = 'Podaj 9-cyfrowy numer telefonu albo zostaw to pole puste.';
+        errorBox.hidden = false;
+        return;
+      }
+
+      const payload = {
+        tematyka: tematykaSelect.value,
+        pakiet: pakietSelect.value,
+        telefon: digits ? '+48' + digits : '',
+        wiadomosc: document.querySelector('[name="wiadomosc"]').value.trim(),
+        rodo: document.querySelector('[name="rodo"]').checked
+      };
+
+      submitBtn.disabled = true;
+      try {
+        const response = await fetch('/api/kontakt', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json();
+        if (!response.ok || !result.ok) {
+          throw new Error(result.error || 'Nie udało się wysłać formularza.');
+        }
+        success.hidden = false;
+        event.target.reset();
+        tematykaSelect.classList.remove('is-prefilled');
+        pakietSelect.classList.remove('is-prefilled');
+        updatePakietOptions();
+      } catch (err) {
+        errorBox.textContent = err.message || 'Nie udało się wysłać formularza. Uruchom stronę przez npm start.';
+        errorBox.hidden = false;
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
+  <script src="nav.js?v=3"></script>
+</body>
+</html>
