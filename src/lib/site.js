@@ -64,6 +64,51 @@ export const galleries = {
   }
 };
 
+function jpegSize(buf) {
+  let offset = 2;
+  while (offset + 9 < buf.length) {
+    if (buf[offset] !== 0xff) break;
+    const marker = buf[offset + 1];
+    if (marker === 0xd8 || marker === 0xd9) {
+      offset += 2;
+      continue;
+    }
+    const length = buf.readUInt16BE(offset + 2);
+    if (marker >= 0xc0 && marker <= 0xc3) {
+      return {
+        height: buf.readUInt16BE(offset + 5),
+        width: buf.readUInt16BE(offset + 7)
+      };
+    }
+    offset += 2 + length;
+  }
+  return null;
+}
+
+function pngSize(buf) {
+  if (buf.length < 24) return null;
+  return {
+    width: buf.readUInt32BE(16),
+    height: buf.readUInt32BE(20)
+  };
+}
+
+function photoOrientation(filePath) {
+  try {
+    const buf = fs.readFileSync(filePath);
+    const size =
+      buf[0] === 0xff && buf[1] === 0xd8
+        ? jpegSize(buf)
+        : buf[0] === 0x89 && buf[1] === 0x50
+          ? pngSize(buf)
+          : null;
+    if (!size || !size.width || !size.height) return 'portrait';
+    return size.width > size.height ? 'landscape' : 'portrait';
+  } catch {
+    return 'portrait';
+  }
+}
+
 export function listPhotos(folder) {
   const dir = path.join(process.cwd(), 'public', 'zdjecia', 'portfolio', folder);
   if (!fs.existsSync(dir)) return [];
@@ -71,8 +116,12 @@ export function listPhotos(folder) {
     .readdirSync(dir)
     .filter((name) => /\.(jpe?g|png|webp)$/i.test(name) && !/^okladka\./i.test(name))
     .sort()
-    .map((name) => ({
-      src: `/zdjecia/portfolio/${folder}/${name}`,
-      alt: path.parse(name).name
-    }));
+    .map((name) => {
+      const filePath = path.join(dir, name);
+      return {
+        src: `/zdjecia/portfolio/${folder}/${name}`,
+        alt: path.parse(name).name,
+        orientation: photoOrientation(filePath)
+      };
+    });
 }

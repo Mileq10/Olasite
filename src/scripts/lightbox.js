@@ -5,6 +5,17 @@ export function initLightbox(root = document) {
   const items = Array.from(grid.querySelectorAll('[data-index]'));
   if (!items.length) return;
 
+  items.forEach((item) => {
+    const img = item.querySelector('img');
+    if (!img) return;
+    const mark = function () {
+      if (img.naturalWidth > img.naturalHeight) item.classList.add('is-landscape');
+      else item.classList.remove('is-landscape');
+    };
+    if (img.complete && img.naturalWidth) mark();
+    else img.addEventListener('load', mark);
+  });
+
   const overlay = root.querySelector('.lightbox');
   const image = overlay?.querySelector('.lightbox-image');
   const closeBtn = overlay?.querySelector('.lightbox-close');

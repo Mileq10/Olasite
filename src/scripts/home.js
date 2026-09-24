@@ -1,3 +1,5 @@
+import { WEB3FORMS_ACCESS_KEY, WEB3FORMS_ENDPOINT } from '../lib/form-config.js';
+
 export function initHomePage() {
   const tematykaSelect = document.getElementById('tematyka');
   const pakietSelect = document.getElementById('pakiet');
@@ -126,20 +128,22 @@ export function initHomePage() {
         payload.wiadomosc
       ].join('\n');
 
-      const response = await fetch('https://formsubmit.co/ajax/' + encodeURIComponent('obiektywna.szczescie@gmail.com'), {
+      const response = await fetch(WEB3FORMS_ENDPOINT, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
-          _subject: 'Zapytanie ze strony: ' + payload.tematyka,
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: 'Zapytanie ze strony: ' + payload.tematyka,
+          from_name: 'Formularz — Obiektyw na Szczęście',
           message: lines,
           tematyka: payload.tematyka,
           pakiet: payload.pakiet,
           telefon: payload.telefon || 'nie podano',
-          _template: 'box'
+          botcheck: document.querySelector('[name="botcheck"]')?.checked ? '1' : ''
         })
       });
       const result = await response.json();
-      if (!response.ok || (result.success !== true && result.success !== 'true')) {
+      if (!response.ok || result.success !== true) {
         throw new Error(result.message || 'Nie udało się wysłać formularza.');
       }
       success.hidden = false;

@@ -962,6 +962,7 @@ body.nav-open {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
   align-items: stretch;
+  grid-auto-flow: dense;
 }
 
 .mosaic-item {
@@ -975,6 +976,11 @@ body.nav-open {
   background: #111;
   cursor: pointer;
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.42);
+}
+
+.mosaic-item.is-landscape {
+  grid-column: span 2;
+  aspect-ratio: 3 / 2;
 }
 
 .mosaic-item img {

@@ -88,7 +88,12 @@ const jsonLd = {
       ) : photos.length ? (
         <div class="photos-grid" data-lightbox>
           {photos.map((photo, index) => (
-            <button type="button" class="mosaic-item" data-index={index} aria-label={`Powiększ zdjęcie ${index + 1} z ${photos.length}`}>
+            <button
+              type="button"
+              class:list={['mosaic-item', photo.orientation === 'landscape' && 'is-landscape']}
+              data-index={index}
+              aria-label={`Powiększ zdjęcie ${index + 1} z ${photos.length}`}
+            >
               <img src={photo.src} alt={`${gallery.title} — zdjęcie ${index + 1}`} />
             </button>
           ))}
