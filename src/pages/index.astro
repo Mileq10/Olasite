@@ -40,13 +40,23 @@ const jsonLd = [
   jsonLd={jsonLd}
 >
   <section class="hero-section" id="home">
+    <img
+      class="hero-bg"
+      src="/zdjecia/hero/tlo.jpg"
+      alt=""
+      width="1920"
+      height="1080"
+      fetchpriority="high"
+      decoding="async"
+    />
     <div class="hero-overlay"></div>
     <div class="container">
       <div class="hero-content">
         <div class="hero-text">
-          <h1>Przeżywaj wspaniałe chwile, i pozwól mi je uwiecznić.</h1>
+          <h1>Przeżywaj wspaniałe chwile i pozwól mi je uwiecznić.</h1>
           <p>
-            To jest tekst placeholderowy aby zapełnić trochę przestrzeni i pokazać jak mogłoby to wyglądać gdyby np było tu coś o typie sesji i dlaczego akurat ktoś chciałby wykupić u ciebie tą sesję, wiesz o co chodzi.
+            Fotografuję sesje portretowe, biznesowe i reportaże z wydarzeń.
+            Naturalne światło, szczere emocje i kadry, które zostają z Wami na dłużej.
           </p>
           <div class="hero-buttons">
             <a href="#kontakt" class="btn btn-primary">Umów się na sesję</a>
@@ -55,13 +65,13 @@ const jsonLd = [
         </div>
         <div class="hero-gallery">
           <div class="gallery-item item-1">
-            <img src="/zdjecia/hero/1.jpg" alt="Sesja rodzinna" />
+            <img src="/zdjecia/hero/1.jpg" alt="Sesja rodzinna" width="800" height="1000" decoding="async" />
           </div>
           <div class="gallery-item item-2">
-            <img src="/zdjecia/hero/2.jpg" alt="Portret kobiety" />
+            <img src="/zdjecia/hero/2.jpg" alt="Portret kobiety" width="800" height="1000" decoding="async" />
           </div>
           <div class="gallery-item item-3">
-            <img src="/zdjecia/hero/3.jpg" alt="Kobieta w ogrodzie" />
+            <img src="/zdjecia/hero/3.jpg" alt="Kobieta w ogrodzie" width="1200" height="800" decoding="async" />
           </div>
         </div>
       </div>
@@ -77,7 +87,7 @@ const jsonLd = [
         <div class="categories-grid">
           <article class="category-card">
             <a href="/galeria/biznesowa" class="category-image">
-              <img src="/zdjecia/portfolio/biznesowa/okladka.jpg" alt="Sesja biznesowa" />
+              <img src="/zdjecia/portfolio/biznesowa/okladka.jpg" alt="Sesja biznesowa" width="900" height="1200" loading="lazy" decoding="async" />
               <span class="category-caption">
                 <span class="category-name">Sesja biznesowa</span>
                 <span class="category-hint">Zobacz galerię</span>
@@ -86,7 +96,7 @@ const jsonLd = [
           </article>
           <article class="category-card">
             <a href="/galeria/portretowa" class="category-image">
-              <img src="/zdjecia/portfolio/portretowa/okladka.jpg" alt="Sesja portretowa" />
+              <img src="/zdjecia/portfolio/portretowa/okladka.jpg" alt="Sesja portretowa" width="900" height="1200" loading="lazy" decoding="async" />
               <span class="category-caption">
                 <span class="category-name">Sesja portretowa</span>
                 <span class="category-hint">Zobacz galerię</span>
@@ -95,7 +105,7 @@ const jsonLd = [
           </article>
           <article class="category-card">
             <a href="/galeria/wydarzenia" class="category-image">
-              <img src="/zdjecia/portfolio/wydarzenia/okladka.jpg" alt="Reportaże z wydarzeń" />
+              <img src="/zdjecia/portfolio/wydarzenia/okladka.jpg" alt="Reportaże z wydarzeń" width="900" height="1200" loading="lazy" decoding="async" />
               <span class="category-caption">
                 <span class="category-name">Reportaże z wydarzeń</span>
                 <span class="category-hint">Zobacz galerię</span>
@@ -113,7 +123,7 @@ const jsonLd = [
       <p class="section-lead">Stałe pakiety na sesje portretowe i biznesowe. Reportaże wyceniam indywidualnie w podanych widełkach.</p>
 
       <div class="offer-category">
-        <button type="button" class="offer-category-head" aria-expanded="false">
+        <button type="button" class="offer-category-head" aria-expanded="true">
           <span class="block-label">Portret</span>
           <span class="offer-category-title">Sesja portretowa</span>
           <span class="offer-toggle" aria-hidden="true"></span>
@@ -168,7 +178,7 @@ const jsonLd = [
       </div>
 
       <div class="offer-category">
-        <button type="button" class="offer-category-head" aria-expanded="false">
+        <button type="button" class="offer-category-head" aria-expanded="true">
           <span class="block-label">Biznes</span>
           <span class="offer-category-title">Sesja biznesowa</span>
           <span class="offer-toggle" aria-hidden="true"></span>
@@ -223,7 +233,7 @@ const jsonLd = [
       </div>
 
       <div class="offer-category">
-        <button type="button" class="offer-category-head" aria-expanded="false">
+        <button type="button" class="offer-category-head" aria-expanded="true">
           <span class="block-label">Reportaże</span>
           <span class="offer-category-title">Reportaże z wydarzeń</span>
           <span class="offer-toggle" aria-hidden="true"></span>
@@ -304,7 +314,7 @@ const jsonLd = [
       <p class="section-lead">Kilka słów o tym, kto stoi za obiektywem.</p>
       <div class="about-grid">
         <figure class="about-photo">
-          <img src="/zdjecia/o-mnie/portret.jpg" alt="Fotografka z aparatem" />
+          <img src="/zdjecia/o-mnie/portret.jpg" alt="Fotografka z aparatem" width="900" height="1200" loading="lazy" decoding="async" />
         </figure>
         <div class="about-text">
           <p class="block-label">Obiektyw na Szczęście</p>
@@ -327,8 +337,13 @@ const jsonLd = [
       <h2 class="section-title">Kontakt</h2>
       <p class="section-lead">Napisz, jaki rodzaj sesji Cię interesuje — odezwę się z propozycją terminu.</p>
       <div class="contact-grid">
-        <form class="contact-form" id="contact-form" autocomplete="off">
-          <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" hidden />
+        <form class="contact-form" id="contact-form" autocomplete="on">
+          <div class="hp" aria-hidden="true">
+            <label>
+              Nie wypełniaj tego pola
+              <input type="text" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" />
+            </label>
+          </div>
           <label class="form-field">
             <span>Tematyka zdjęć</span>
             <select name="tematyka" id="tematyka" required>
@@ -350,6 +365,19 @@ const jsonLd = [
             </select>
           </label>
           <label class="form-field">
+            <span>Adres e-mail</span>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              required
+              maxlength="120"
+              autocomplete="email"
+              inputmode="email"
+              placeholder="np. jan@example.com"
+            />
+          </label>
+          <label class="form-field">
             <span>Numer telefonu (opcjonalnie)</span>
             <div class="phone-input">
               <span class="phone-prefix">+48</span>
@@ -359,7 +387,7 @@ const jsonLd = [
           <p class="form-hint">Numer telefonu jest opcjonalny, ale ułatwi kontakt i dogadanie oferty. Wpisz 9 cyfr — kierunkowy +48 jest stały.</p>
           <label class="form-field">
             <span>Wiadomość</span>
-            <textarea name="wiadomosc" rows="5" required placeholder="Napisz, czego potrzebujesz i jaki termin Ci pasuje."></textarea>
+            <textarea name="wiadomosc" rows="5" required maxlength="2000" placeholder="Napisz, czego potrzebujesz i jaki termin Ci pasuje."></textarea>
           </label>
           <label class="form-check">
             <input type="checkbox" name="rodo" required />
@@ -369,10 +397,13 @@ const jsonLd = [
             </span>
           </label>
           <button type="submit" class="btn btn-primary" id="form-submit">Wyślij zapytanie</button>
-          <p class="form-success" id="form-success" hidden>Dziękuję. Zapytanie zostało wysłane — odezwę się tak szybko, jak to możliwe.</p>
-          <p class="form-error" id="form-error" hidden></p>
+          <p class="form-success" id="form-success" hidden role="status" aria-live="polite">
+            <strong>Wiadomość wysłana.</strong>
+            Dziękuję za zapytanie — odezwę się tak szybko, jak to możliwe.
+          </p>
+          <p class="form-error" id="form-error" hidden role="alert"></p>
           <p class="rodo-note">
-            Administratorem danych jest Obiektyw na Szczęście. Przetwarzamy tematykę, pakiet i treść wiadomości,
+            Administratorem danych jest Obiektyw na Szczęście. Przetwarzamy tematykę, pakiet, adres e-mail i treść wiadomości,
             a numer telefonu tylko jeśli go podasz. Dane służą obsłudze zapytania. Masz prawo dostępu do danych,
             ich sprostowania, usunięcia, ograniczenia przetwarzania oraz wniesienia sprzeciwu.
             Podanie wiadomości jest niezbędne do kontaktu zwrotnego. Szczegóły znajdziesz w

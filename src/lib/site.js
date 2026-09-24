@@ -10,6 +10,8 @@ export const INSTAGRAM_HANDLE = '@obiektywna.szczescie';
 export const DEFAULT_DESCRIPTION =
   'Fotografia portretowa, biznesowa i reportażowa. Sesje, śluby, komunie, eventy i sport — Obiektyw na Szczęście.';
 export const DEFAULT_OG_IMAGE = '/zdjecia/hero/tlo.jpg';
+export const OG_IMAGE_WIDTH = 1200;
+export const OG_IMAGE_HEIGHT = 630;
 
 export const galleries = {
   biznesowa: {
@@ -49,18 +51,6 @@ export const galleries = {
     parent: 'wydarzenia',
     folder: 'eventy-sport',
     description: 'Relacje z eventów i wydarzeń sportowych — dynamika, emocje i kulisy.'
-  },
-  eventy: {
-    title: 'Eventy',
-    parent: 'wydarzenia',
-    folder: 'eventy',
-    description: 'Fotografia eventowa: konferencje, imprezy firmowe i wydarzenia plenerowe.'
-  },
-  sport: {
-    title: 'Sport',
-    parent: 'wydarzenia',
-    folder: 'sport',
-    description: 'Fotografia sportowa: mecze, treningi i relacje z zawodów.'
   }
 };
 
@@ -93,19 +83,35 @@ function pngSize(buf) {
   };
 }
 
-function photoOrientation(filePath) {
+function readHeader(filePath, maxBytes = 65536) {
+  const fd = fs.openSync(filePath, 'r');
   try {
-    const buf = fs.readFileSync(filePath);
+    const buf = Buffer.alloc(Math.min(maxBytes, 65536));
+    const bytes = fs.readSync(fd, buf, 0, buf.length, 0);
+    return buf.subarray(0, bytes);
+  } finally {
+    fs.closeSync(fd);
+  }
+}
+
+function photoMeta(filePath) {
+  try {
+    const buf = readHeader(filePath);
     const size =
       buf[0] === 0xff && buf[1] === 0xd8
         ? jpegSize(buf)
         : buf[0] === 0x89 && buf[1] === 0x50
           ? pngSize(buf)
           : null;
-    if (!size || !size.width || !size.height) return 'portrait';
-    return size.width > size.height ? 'landscape' : 'portrait';
+    const width = size?.width || 1200;
+    const height = size?.height || 1500;
+    return {
+      width,
+      height,
+      orientation: width > height ? 'landscape' : 'portrait'
+    };
   } catch {
-    return 'portrait';
+    return { width: 1200, height: 1500, orientation: 'portrait' };
   }
 }
 
@@ -118,10 +124,13 @@ export function listPhotos(folder) {
     .sort()
     .map((name) => {
       const filePath = path.join(dir, name);
+      const meta = photoMeta(filePath);
       return {
         src: `/zdjecia/portfolio/${folder}/${name}`,
         alt: path.parse(name).name,
-        orientation: photoOrientation(filePath)
+        width: meta.width,
+        height: meta.height,
+        orientation: meta.orientation
       };
     });
 }

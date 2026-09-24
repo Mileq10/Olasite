@@ -26,7 +26,10 @@ export function initLightbox(root = document) {
 
   const sources = items.map((item) => {
     const img = item.querySelector('img');
-    return { src: img?.currentSrc || img?.src || '', alt: img?.alt || '' };
+    return {
+      src: img?.getAttribute('data-full') || img?.currentSrc || img?.src || '',
+      alt: img?.alt || ''
+    };
   });
 
   let current = 0;

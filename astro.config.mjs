@@ -11,11 +11,15 @@ export default defineConfig({
   },
   integrations: [
     sitemap({
-      filter: (page) =>
-        !page.includes('polityka-prywatnosci.html') && !page.endsWith('/galeria/')
+      filter: (page) => {
+        const pathname = new URL(page).pathname.replace(/\/+$/, '') || '/';
+        return pathname !== '/polityka-prywatnosci.html' && pathname !== '/galeria';
+      }
     })
   ],
   redirects: {
-    '/polityka-prywatnosci.html': '/polityka-prywatnosci'
+    '/polityka-prywatnosci.html': '/polityka-prywatnosci',
+    '/galeria/eventy': '/galeria/eventy-sport',
+    '/galeria/sport': '/galeria/eventy-sport'
   }
 });

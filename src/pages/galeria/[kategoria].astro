@@ -76,7 +76,7 @@ const jsonLd = {
           {gallery.children.map((child) => (
             <article class="category-card">
               <a href={`/galeria/${child.key}`} class="category-image">
-                <img src={child.image} alt={child.title} />
+                <img src={child.image} alt={child.title} width="900" height="1200" loading="lazy" decoding="async" />
                 <span class="category-caption">
                   <span class="category-name">{child.title}</span>
                   <span class="category-hint">Zobacz galerię</span>
@@ -94,7 +94,15 @@ const jsonLd = {
               data-index={index}
               aria-label={`Powiększ zdjęcie ${index + 1} z ${photos.length}`}
             >
-              <img src={photo.src} alt={`${gallery.title} — zdjęcie ${index + 1}`} />
+              <img
+                src={photo.src}
+                alt={`${gallery.title} — zdjęcie ${index + 1}`}
+                width={photo.width}
+                height={photo.height}
+                loading={index < 4 ? 'eager' : 'lazy'}
+                decoding="async"
+                data-full={photo.src}
+              />
             </button>
           ))}
         </div>
