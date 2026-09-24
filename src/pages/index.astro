@@ -337,16 +337,16 @@ const jsonLd = [
       <h2 class="section-title">Kontakt</h2>
       <p class="section-lead">Napisz, jaki rodzaj sesji Cię interesuje — odezwę się z propozycją terminu.</p>
       <div class="contact-grid">
-        <form class="contact-form" id="contact-form" autocomplete="on">
+        <form class="contact-form" id="contact-form" autocomplete="on" novalidate>
           <div class="hp" aria-hidden="true">
             <label>
               Nie wypełniaj tego pola
               <input type="text" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" />
             </label>
           </div>
-          <label class="form-field">
+          <label class="form-field" data-field="tematyka">
             <span>Tematyka zdjęć</span>
-            <select name="tematyka" id="tematyka" required>
+            <select name="tematyka" id="tematyka" aria-describedby="error-tematyka">
               <option value="" disabled selected>Wybierz kategorię</option>
               <option value="portretowa">Sesja portretowa</option>
               <option value="biznesowa">Sesja biznesowa</option>
@@ -357,45 +357,56 @@ const jsonLd = [
                 <option value="sport">Sport</option>
               </optgroup>
             </select>
+            <p class="field-error" id="error-tematyka" hidden></p>
           </label>
-          <label class="form-field">
+          <label class="form-field" data-field="pakiet">
             <span>Pakiet</span>
-            <select name="pakiet" id="pakiet" required disabled>
+            <select name="pakiet" id="pakiet" disabled aria-describedby="error-pakiet">
               <option value="" disabled selected>Najpierw wybierz tematykę</option>
             </select>
+            <p class="field-error" id="error-pakiet" hidden></p>
           </label>
-          <label class="form-field">
+          <label class="form-field" data-field="email">
             <span>Adres e-mail</span>
             <input
               type="email"
               name="email"
               id="email"
-              required
               maxlength="120"
               autocomplete="email"
               inputmode="email"
               placeholder="np. jan@example.com"
+              aria-describedby="error-email"
             />
+            <p class="field-error" id="error-email" hidden></p>
           </label>
-          <label class="form-field">
+          <label class="form-field" data-field="telefon">
             <span>Numer telefonu (opcjonalnie)</span>
             <div class="phone-input">
               <span class="phone-prefix">+48</span>
-              <input type="tel" name="telefon" id="telefon" inputmode="numeric" autocomplete="tel-national" maxlength="9" pattern="[0-9]{9}" placeholder="123 456 789" title="Podaj 9 cyfr albo zostaw puste" />
+              <input
+                type="tel"
+                name="telefon"
+                id="telefon"
+                inputmode="numeric"
+                autocomplete="tel-national"
+                maxlength="11"
+                placeholder="000 000 000"
+                aria-describedby="error-telefon form-hint-telefon"
+              />
             </div>
+            <p class="field-error" id="error-telefon" hidden></p>
           </label>
-          <p class="form-hint">Numer telefonu jest opcjonalny, ale ułatwi kontakt i dogadanie oferty. Wpisz 9 cyfr — kierunkowy +48 jest stały.</p>
-          <label class="form-field">
+          <p class="form-hint" id="form-hint-telefon">Numer jest opcjonalny.</p>
+          <label class="form-field" data-field="wiadomosc">
             <span>Wiadomość</span>
-            <textarea name="wiadomosc" rows="5" required maxlength="2000" placeholder="Napisz, czego potrzebujesz i jaki termin Ci pasuje."></textarea>
+            <textarea name="wiadomosc" rows="5" maxlength="2000" placeholder="Napisz, czego potrzebujesz i jaki termin Ci pasuje." aria-describedby="error-wiadomosc"></textarea>
+            <p class="field-error" id="error-wiadomosc" hidden></p>
           </label>
-          <label class="form-check">
-            <input type="checkbox" name="rodo" required />
-            <span>
-              Wyrażam zgodę na przetwarzanie moich danych osobowych w celu odpowiedzi na zapytanie
-              zgodnie z <a href="/polityka-prywatnosci">Polityką prywatności</a>.
-            </span>
-          </label>
+          <p class="form-disclaimer">
+            Klikając <strong>Wyślij zapytanie</strong>, akceptujesz regulamin oraz
+            <a href="/polityka-prywatnosci">Politykę prywatności</a>.
+          </p>
           <button type="submit" class="btn btn-primary" id="form-submit">Wyślij zapytanie</button>
           <p class="form-success" id="form-success" hidden role="status" aria-live="polite">
             <strong>Wiadomość wysłana.</strong>

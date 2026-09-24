@@ -1,4 +1,5 @@
 import { WEB3FORMS_ACCESS_KEY, WEB3FORMS_ENDPOINT } from '../lib/form-config.js';
+import { contactSchema, formatPhoneMask, phoneDigits } from '../lib/contact-schema.js';
 
 export function initHomePage() {
   const tematykaSelect = document.getElementById('tematyka');
@@ -6,6 +7,7 @@ export function initHomePage() {
   if (!tematykaSelect || !pakietSelect) return;
 
   const reportageKeys = ['slubne', 'komunie', 'eventy', 'sport'];
+  const fieldNames = ['tematyka', 'pakiet', 'email', 'telefon', 'wiadomosc'];
 
   function updatePakietOptions() {
     const tematyka = tematykaSelect.value;
@@ -42,6 +44,8 @@ export function initHomePage() {
     }
     tematykaSelect.classList.add('is-prefilled');
     pakietSelect.classList.add('is-prefilled');
+    clearFieldError('tematyka');
+    clearFieldError('pakiet');
   }
 
   document.querySelectorAll('.js-fill-form').forEach(function (button) {
@@ -95,9 +99,60 @@ export function initHomePage() {
   }
   syncOfferAria();
 
+  function fieldWrap(name) {
+    return document.querySelector('[data-field="' + name + '"]');
+  }
+
+  function fieldControl(name) {
+    if (name === 'wiadomosc') return document.querySelector('[name="wiadomosc"]');
+    return document.getElementById(name);
+  }
+
+  function clearFieldError(name) {
+    const wrap = fieldWrap(name);
+    const control = fieldControl(name);
+    const err = document.getElementById('error-' + name);
+    wrap?.classList.remove('is-invalid');
+    control?.classList.remove('is-invalid');
+    control?.removeAttribute('aria-invalid');
+    if (err) {
+      err.hidden = true;
+      err.textContent = '';
+    }
+  }
+
+  function clearAllFieldErrors() {
+    fieldNames.forEach(clearFieldError);
+  }
+
+  function setFieldError(name, message) {
+    const wrap = fieldWrap(name);
+    const control = fieldControl(name);
+    const err = document.getElementById('error-' + name);
+    wrap?.classList.add('is-invalid');
+    control?.classList.add('is-invalid');
+    control?.setAttribute('aria-invalid', 'true');
+    if (err) {
+      err.hidden = false;
+      err.textContent = message;
+    }
+  }
+
   const telefonInput = document.getElementById('telefon');
   telefonInput.addEventListener('input', function () {
-    telefonInput.value = telefonInput.value.replace(/\D/g, '').slice(0, 9);
+    telefonInput.value = formatPhoneMask(telefonInput.value);
+    clearFieldError('telefon');
+  });
+
+  fieldNames.forEach(function (name) {
+    const control = fieldControl(name);
+    if (!control || name === 'telefon') return;
+    control.addEventListener('input', function () {
+      clearFieldError(name);
+    });
+    control.addEventListener('change', function () {
+      clearFieldError(name);
+    });
   });
 
   document.getElementById('contact-form').addEventListener('submit', async function (event) {
@@ -107,54 +162,39 @@ export function initHomePage() {
     const submitBtn = document.getElementById('form-submit');
     success.hidden = true;
     errorBox.hidden = true;
+    clearAllFieldErrors();
 
-    const digits = telefonInput.value.replace(/\D/g, '');
     const emailInput = document.getElementById('email');
-    const email = (emailInput?.value || '').trim();
-    const message = document.querySelector('[name="wiadomosc"]').value.trim();
     const honeypot = (document.querySelector('[name="botcheck"]')?.value || '').trim();
-    if (!tematykaSelect.value) {
-      errorBox.textContent = 'Najpierw wybierz tematykę zdjęć.';
-      errorBox.hidden = false;
-      tematykaSelect.focus();
-      return;
-    }
-    if (!pakietSelect.value || pakietSelect.disabled) {
-      errorBox.textContent = 'Wybierz pakiet.';
-      errorBox.hidden = false;
-      pakietSelect.focus();
-      return;
-    }
-    if (digits && digits.length !== 9) {
-      errorBox.textContent = 'Podaj 9-cyfrowy numer telefonu albo zostaw to pole puste.';
-      errorBox.hidden = false;
-      return;
-    }
-
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 120) {
-      errorBox.textContent = 'Podaj poprawny adres e-mail.';
-      errorBox.hidden = false;
-      emailInput?.focus();
-      return;
-    }
-    if (!message) {
-      errorBox.textContent = 'Napisz krótką wiadomość.';
-      errorBox.hidden = false;
-      return;
-    }
-    if (message.length > 2000) {
-      errorBox.textContent = 'Wiadomość może mieć maksymalnie 2000 znaków.';
-      errorBox.hidden = false;
-      return;
-    }
-
-    const payload = {
+    const parsed = contactSchema.safeParse({
       tematyka: tematykaSelect.value,
-      pakiet: pakietSelect.value,
-      email,
+      pakiet: pakietSelect.disabled ? '' : pakietSelect.value,
+      email: (emailInput?.value || '').trim(),
+      telefon: telefonInput.value,
+      wiadomosc: document.querySelector('[name="wiadomosc"]').value
+    });
+
+    if (!parsed.success) {
+      const issues = parsed.error.issues || [];
+      const seen = {};
+      issues.forEach(function (issue) {
+        const name = issue.path?.[0];
+        if (!name || seen[name]) return;
+        seen[name] = true;
+        setFieldError(String(name), issue.message);
+      });
+      const first = fieldControl(Object.keys(seen)[0]);
+      first?.focus();
+      return;
+    }
+
+    const digits = phoneDigits(parsed.data.telefon);
+    const payload = {
+      tematyka: parsed.data.tematyka,
+      pakiet: parsed.data.pakiet,
+      email: parsed.data.email,
       telefon: digits ? '+48' + digits : '',
-      wiadomosc: message,
-      rodo: document.querySelector('[name="rodo"]').checked
+      wiadomosc: parsed.data.wiadomosc
     };
 
     submitBtn.disabled = true;
@@ -195,7 +235,7 @@ export function initHomePage() {
           message: lines,
           tematyka: payload.tematyka,
           pakiet: payload.pakiet,
-          telefon: payload.telefon || 'nie podano',
+          telefon: payload.telefon || 'nie podano'
         })
       });
       const result = await response.json();
