@@ -1,0 +1,92 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import InstagramLink from '../../components/InstagramLink.astro';
+import { SITE_NAME, galleries, listPhotos } from '../../lib/site.js';
+
+export function getStaticPaths() {
+  return Object.keys(galleries).map((kategoria) => ({ params: { kategoria } }));
+}
+
+const { kategoria } = Astro.params;
+const gallery = galleries[kategoria] || galleries.biznesowa;
+const photos = gallery.folder ? listPhotos(gallery.folder) : [];
+const backHref = gallery.parent ? `/galeria/${gallery.parent}` : '/#portfolio';
+const backLabel = gallery.parent ? '← Wróć do reportaży' : '← Wróć do kategorii';
+const description =
+  gallery.description || `${gallery.title} — galeria zdjęć | ${SITE_NAME}`;
+const image =
+  gallery.type === 'hub'
+    ? gallery.children[0]?.image
+    : photos[0]?.src || `/zdjecia/portfolio/${gallery.folder}/okladka.jpg`;
+const origin = Astro.site ?? Astro.url;
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Strona główna', item: new URL('/', origin).href },
+    { '@type': 'ListItem', position: 2, name: 'Portfolio', item: new URL('/#portfolio', origin).href },
+    ...(gallery.parent
+      ? [
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: galleries[gallery.parent].title,
+            item: new URL(`/galeria/${gallery.parent}`, origin).href
+          },
+          {
+            '@type': 'ListItem',
+            position: 4,
+            name: gallery.title,
+            item: new URL(`/galeria/${kategoria}`, origin).href
+          }
+        ]
+      : [
+          {
+            '@type': 'ListItem',
+            position: 3,
+            name: gallery.title,
+            item: new URL(`/galeria/${kategoria}`, origin).href
+          }
+        ])
+  ]
+};
+---
+
+<Layout title={`${gallery.title} | ${SITE_NAME}`} description={description} image={image} jsonLd={jsonLd}>
+  <div class="gallery-page">
+    <div class="section-inner">
+      <a class="gallery-back" href={backHref}>{backLabel}</a>
+      <h1>{gallery.title}</h1>
+
+      {gallery.type === 'hub' ? (
+        <div class="categories-grid">
+          {gallery.children.map((child) => (
+            <article class="category-card">
+              <a href={`/galeria/${child.key}`} class="category-image">
+                <img src={child.image} alt={child.title} />
+                <span class="category-caption">
+                  <span class="category-name">{child.title}</span>
+                  <span class="category-hint">Zobacz galerię</span>
+                </span>
+              </a>
+            </article>
+          ))}
+        </div>
+      ) : photos.length ? (
+        <div class="photos-grid">
+          {photos.map((photo, index) => (
+            <img src={photo.src} alt={`${gallery.title} — zdjęcie ${index + 1}`} />
+          ))}
+        </div>
+      ) : (
+        <p class="section-lead">Brak zdjęć w folderze. Wrzuć pliki do public/zdjecia/portfolio/{gallery.folder}/</p>
+      )}
+
+      <section class="more-photos">
+        <h2>Więcej zdjęć?</h2>
+        <p>Kolejne realizacje wrzucam na Instagram — zajrzyj, jeśli chcesz zobaczyć więcej kadrów.</p>
+        <InstagramLink class="instagram-link more-photos-link" />
+      </section>
+    </div>
+  </div>
+</Layout>

@@ -1,0 +1,47 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { SITE_NAME, PHONE_LABEL } from '../lib/site.js';
+---
+
+<Layout
+  title={`Polityka prywatności | ${SITE_NAME}`}
+  description="Informacje o przetwarzaniu danych osobowych z formularza kontaktowego — polityka prywatności Obiektyw na Szczęście."
+>
+  <div class="privacy-page">
+    <div class="section-inner">
+      <a class="gallery-back" href="/#kontakt">← Wróć do kontaktu</a>
+      <h1>Polityka prywatności</h1>
+
+      <h2>1. Administrator danych</h2>
+      <p>
+        Administratorem danych osobowych jest Obiektyw na Szczęście. W sprawach dotyczących ochrony danych
+        można kontaktować się telefonicznie pod numerem {PHONE_LABEL} lub przez formularz na stronie.
+      </p>
+
+      <h2>2. Jakie dane zbieramy</h2>
+      <p>
+        Za pomocą formularza kontaktowego przetwarzamy tematykę zdjęć, wybrany pakiet i treść wiadomości.
+        Numer telefonu jest opcjonalny — przetwarzamy go tylko wtedy, gdy go podasz, żeby ułatwić kontakt.
+      </p>
+
+      <h2>3. Cel i podstawa prawna</h2>
+      <p>
+        Dane są przetwarzane w celu odpowiedzi na zapytanie i umówienia sesji.
+        Podstawą jest art. 6 ust. 1 lit. a RODO (zgoda) oraz art. 6 ust. 1 lit. b RODO
+        (działania przed zawarciem umowy na żądanie osoby, której dane dotyczą).
+      </p>
+
+      <h2>4. Okres przechowywania</h2>
+      <p>
+        Dane z formularza przechowujemy do czasu zakończenia korespondencji, a jeśli dojdzie do współpracy —
+        przez czas realizacji zlecenia i okres wymagany przepisami podatkowymi.
+      </p>
+
+      <h2>5. Twoje prawa</h2>
+      <p>Przysługuje Ci prawo dostępu do danych, ich sprostowania, usunięcia, ograniczenia przetwarzania, przenoszenia oraz wniesienia sprzeciwu. Masz też prawo wnieść skargę do Prezesa Urzędu Ochrony Danych Osobowych.</p>
+
+      <h2>6. Dobrowolność</h2>
+      <p>Podanie danych jest dobrowolne, ale niezbędne, abyśmy mogli się z Tobą skontaktować.</p>
+    </div>
+  </div>
+</Layout>

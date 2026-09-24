@@ -1,0 +1,29 @@
+---
+const links = [
+  { href: '/#portfolio', label: 'Portfolio' },
+  { href: '/#oferta', label: 'Oferta' },
+  { href: '/#o-mnie', label: 'O mnie' },
+  { href: '/#kontakt', label: 'Kontakt' }
+];
+---
+
+<header class="site-header" id="site-header">
+  <div class="site-header-inner">
+    <a href="/" class="logo" aria-label="Obiektyw na Szczęście — do góry strony">
+      <span>OBIEKTYW NA SZCZĘŚCIE</span>
+    </a>
+    <nav class="navbar" id="site-nav">
+      <ul class="nav-links">
+        {links.map((link) => (
+          <li><a href={link.href}>{link.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+    <button class="nav-toggle" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Otwórz menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+  <button class="nav-backdrop" type="button" aria-label="Zamknij menu" hidden></button>
+</header>

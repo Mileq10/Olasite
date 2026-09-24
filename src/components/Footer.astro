@@ -1,0 +1,46 @@
+---
+import { EMAIL_TO, PHONE, PHONE_LABEL, INSTAGRAM_URL } from '../lib/site.js';
+
+const links = [
+  { href: '/#portfolio', label: 'Portfolio' },
+  { href: '/#oferta', label: 'Oferta' },
+  { href: '/#o-mnie', label: 'O mnie' },
+  { href: '/#kontakt', label: 'Kontakt' }
+];
+---
+
+<footer class="site-footer">
+  <div class="section-inner footer-grid">
+    <div class="footer-brand">
+      <p class="footer-logo">OBIEKTYW NA SZCZĘŚCIE</p>
+      <p>Fotografia portretowa, biznesowa i reportażowa. Administrator danych: Obiektyw na Szczęście.</p>
+    </div>
+    <div>
+      <p class="block-label">Nawigacja</p>
+      <ul class="footer-links">
+        {links.map((link) => (
+          <li><a href={link.href}>{link.label}</a></li>
+        ))}
+      </ul>
+    </div>
+    <div>
+      <p class="block-label">Kontakt</p>
+      <ul class="footer-links">
+        <li><a href={`tel:${PHONE}`}>{PHONE_LABEL}</a></li>
+        <li><a href={`mailto:${EMAIL_TO}`}>{EMAIL_TO}</a></li>
+        <li><a href={INSTAGRAM_URL} target="_blank" rel="noopener noreferrer">Instagram</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="block-label">Informacje</p>
+      <ul class="footer-links">
+        <li><a href="/polityka-prywatnosci">Polityka prywatności</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="section-inner">
+      <p>© {new Date().getFullYear()} Obiektyw na Szczęście. Wszelkie prawa zastrzeżone. Zdjęcia chronione prawem autorskim. Strona nie wykorzystuje plików cookies analitycznych.</p>
+    </div>
+  </div>
+</footer>
