@@ -1186,7 +1186,20 @@ body.lightbox-open .site-header {
 
   .photos-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
+    grid-auto-rows: auto;
+    gap: 8px;
+  }
+
+  .mosaic-item {
+    grid-column: span 1;
+    grid-row: auto;
+    aspect-ratio: 4 / 5;
+    height: auto;
+  }
+
+  .mosaic-item.is-landscape {
+    grid-column: span 2;
+    aspect-ratio: 3 / 2;
   }
 
   .lightbox {
@@ -1578,11 +1591,7 @@ body.lightbox-open .site-header {
   }
 
   .photos-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .mosaic-item.is-landscape {
-    grid-column: auto;
+    gap: 6px;
   }
 
   .footer-grid {
