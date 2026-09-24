@@ -11,7 +11,13 @@ const { kategoria } = Astro.params;
 const gallery = galleries[kategoria] || galleries.biznesowa;
 const photos = gallery.folder ? listPhotos(gallery.folder) : [];
 const backHref = gallery.parent ? `/galeria/${gallery.parent}` : '/#portfolio';
-const backLabel = gallery.parent ? '← Wróć do reportaży' : '← Wróć do kategorii';
+const backLabel = gallery.parent ? 'Wróć do reportaży' : 'Wróć do kategorii';
+const eyebrow = gallery.parent ? galleries[gallery.parent].title : 'Portfolio';
+const lead =
+  gallery.description ||
+  (gallery.type === 'hub'
+    ? 'Wybierz rodzaj reportażu, żeby zobaczyć zdjęcia.'
+    : 'Kliknij zdjęcie, aby powiększyć. Strzałkami lub gestem przejdziesz dalej.');
 const description =
   gallery.description || `${gallery.title} — galeria zdjęć | ${SITE_NAME}`;
 const image =
@@ -55,8 +61,15 @@ const jsonLd = {
 <Layout title={`${gallery.title} | ${SITE_NAME}`} description={description} image={image} jsonLd={jsonLd}>
   <div class="gallery-page">
     <div class="section-inner">
-      <a class="gallery-back" href={backHref}>{backLabel}</a>
-      <h1>{gallery.title}</h1>
+      <a class="gallery-back" href={backHref}>
+        <span aria-hidden="true">←</span>
+        {backLabel}
+      </a>
+      <header class="gallery-intro">
+        <p class="gallery-eyebrow">{eyebrow}</p>
+        <h1 class="gallery-title">{gallery.title}</h1>
+        <p class="gallery-lead">{lead}</p>
+      </header>
 
       {gallery.type === 'hub' ? (
         <div class="categories-grid">
@@ -73,9 +86,11 @@ const jsonLd = {
           ))}
         </div>
       ) : photos.length ? (
-        <div class="photos-grid">
+        <div class="photos-grid" data-lightbox>
           {photos.map((photo, index) => (
-            <img src={photo.src} alt={`${gallery.title} — zdjęcie ${index + 1}`} />
+            <button type="button" class="mosaic-item" data-index={index} aria-label={`Powiększ zdjęcie ${index + 1} z ${photos.length}`}>
+              <img src={photo.src} alt={`${gallery.title} — zdjęcie ${index + 1}`} />
+            </button>
           ))}
         </div>
       ) : (
@@ -89,4 +104,27 @@ const jsonLd = {
       </section>
     </div>
   </div>
+
+  {photos.length > 0 && (
+    <div class="lightbox" hidden role="dialog" aria-modal="true" aria-label="Podgląd zdjęcia">
+      <button type="button" class="lightbox-close" aria-label="Zamknij podgląd">
+        <span aria-hidden="true">×</span>
+      </button>
+      <button type="button" class="lightbox-prev" aria-label="Poprzednie zdjęcie">
+        <span aria-hidden="true">‹</span>
+      </button>
+      <figure class="lightbox-stage">
+        <img class="lightbox-image" alt="" />
+        <figcaption class="lightbox-counter"></figcaption>
+      </figure>
+      <button type="button" class="lightbox-next" aria-label="Następne zdjęcie">
+        <span aria-hidden="true">›</span>
+      </button>
+    </div>
+  )}
 </Layout>
+
+<script>
+  import { initLightbox } from '../../scripts/lightbox.js';
+  initLightbox();
+</script>
