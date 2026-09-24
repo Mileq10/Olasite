@@ -1,0 +1,16 @@
+Jak podmienić zdjęcia
+=====================
+Wrzucaj pliki JPG/PNG/WEBP o tych samych nazwach albo dodawaj kolejne numery.
+
+hero/
+  tlo.jpg     — duże tło pierwszej sekcji
+  1.jpg 2.jpg 3.jpg — trzy kafelki po prawej w hero
+
+o-mnie/
+  portret.jpg — zdjęcie w sekcji O mnie
+
+portfolio/biznesowa/
+  okladka.jpg — miniaturka kategorii na stronie głównej
+  01.jpg, 02.jpg... — zdjęcia w galerii (serwer wczyta wszystkie oprócz okladka.*)
+
+To samo dla: portretowa, wydarzenia (tylko okladka), slubne, komunie, eventy-sport, eventy, sport.
