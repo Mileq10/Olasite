@@ -4,6 +4,21 @@ export const TEMATYKA = ['portretowa', 'biznesowa', 'slubne', 'komunie', 'eventy
 export const REPORTAGE = ['slubne', 'komunie', 'eventy', 'sport'];
 export const SESSION_PACKAGES = ['mini', 'standard', 'premium'];
 
+export const FORM_TOPICS = [
+  { value: 'portretowa', label: 'Sesja portretowa' },
+  { value: 'biznesowa', label: 'Sesja biznesowa' },
+  { value: 'slubne', label: 'Ślubne', group: 'Reportaże z wydarzeń' },
+  { value: 'komunie', label: 'Komunijne', group: 'Reportaże z wydarzeń' },
+  { value: 'eventy', label: 'Eventy', group: 'Reportaże z wydarzeń' },
+  { value: 'sport', label: 'Sport', group: 'Reportaże z wydarzeń' }
+];
+
+export const PACKAGE_OPTIONS = [
+  { value: 'mini', label: 'Pakiet Mini' },
+  { value: 'standard', label: 'Pakiet Standard' },
+  { value: 'premium', label: 'Pakiet Premium' }
+];
+
 export const contactSchema = z
   .object({
     tematyka: z.enum(TEMATYKA, { error: 'Wybierz tematykę zdjęć.' }),
@@ -63,4 +78,18 @@ export function formatPhoneMask(value) {
 
 export function phoneDigits(value) {
   return String(value || '').replace(/\D/g, '').slice(0, 9);
+}
+
+export function applyPhoneMask(value, selectionStart) {
+  const raw = String(value || '');
+  const start = selectionStart == null ? raw.length : selectionStart;
+  const digitsBefore = raw.slice(0, start).replace(/\D/g, '').length;
+  const masked = formatPhoneMask(raw);
+  if (!digitsBefore) return { value: masked, caret: 0 };
+  let seen = 0;
+  for (let i = 0; i < masked.length; i++) {
+    if (/\d/.test(masked[i])) seen += 1;
+    if (seen === digitsBefore) return { value: masked, caret: i + 1 };
+  }
+  return { value: masked, caret: masked.length };
 }

@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import InstagramLink from '../../components/InstagramLink.astro';
-import { SITE_NAME, galleries, listPhotos } from '../../lib/site.js';
+import { SITE_NAME, galleries, listPhotos, publicImageMeta } from '../../lib/site.js';
 
 export function getStaticPaths() {
   return Object.keys(galleries).map((kategoria) => ({ params: { kategoria } }));
@@ -9,7 +9,7 @@ export function getStaticPaths() {
 
 const { kategoria } = Astro.params;
 const gallery = galleries[kategoria] || galleries.biznesowa;
-const photos = gallery.folder ? listPhotos(gallery.folder) : [];
+const photos = gallery.folder ? await listPhotos(gallery.folder) : [];
 const backHref = gallery.parent ? `/galeria/${gallery.parent}` : '/#portfolio';
 const backLabel = gallery.parent ? 'Wróć do reportaży' : 'Wróć do kategorii';
 const eyebrow = gallery.parent ? galleries[gallery.parent].title : 'Portfolio';
@@ -24,11 +24,19 @@ const image =
   gallery.type === 'hub'
     ? gallery.children[0]?.image
     : photos[0]?.src || `/zdjecia/portfolio/${gallery.folder}/okladka.jpg`;
+const coverMeta = photos[0]
+  ? { width: photos[0].width, height: photos[0].height }
+  : image
+    ? await publicImageMeta(image)
+    : null;
+const imageAlt = photos[0]?.alt || `${gallery.title} — ${SITE_NAME}`;
 const origin = Astro.site ?? Astro.url;
-const jsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
-  itemListElement: [
+const pageUrl = new URL(`/galeria/${kategoria}`, origin).href;
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Strona główna', item: new URL('/', origin).href },
     { '@type': 'ListItem', position: 2, name: 'Portfolio', item: new URL('/#portfolio', origin).href },
     ...(gallery.parent
@@ -54,11 +62,36 @@ const jsonLd = {
             item: new URL(`/galeria/${kategoria}`, origin).href
           }
         ])
-  ]
-};
+    ]
+  }
+];
+if (photos.length) {
+  jsonLd.push({
+    '@context': 'https://schema.org',
+    '@type': 'ImageGallery',
+    name: gallery.title,
+    description,
+    url: pageUrl,
+    image: photos.slice(0, 12).map((photo) => ({
+      '@type': 'ImageObject',
+      contentUrl: new URL(photo.src, origin).href,
+      name: photo.alt,
+      width: photo.width,
+      height: photo.height
+    }))
+  });
+}
 ---
 
-<Layout title={`${gallery.title} | ${SITE_NAME}`} description={description} image={image} jsonLd={jsonLd}>
+<Layout
+  title={`${gallery.title} | ${SITE_NAME}`}
+  description={description}
+  image={image}
+  imageWidth={coverMeta?.width}
+  imageHeight={coverMeta?.height}
+  imageAlt={imageAlt}
+  jsonLd={jsonLd}
+>
   <div class="gallery-page">
     <div class="section-inner">
       <a class="gallery-back" href={backHref}>
@@ -92,11 +125,11 @@ const jsonLd = {
               type="button"
               class:list={['mosaic-item', photo.orientation === 'landscape' && 'is-landscape']}
               data-index={index}
-              aria-label={`Powiększ zdjęcie ${index + 1} z ${photos.length}`}
+              aria-label={`Powiększ: ${photo.alt}`}
             >
               <img
                 src={photo.src}
-                alt={`${gallery.title} — zdjęcie ${index + 1}`}
+                alt={photo.alt}
                 width={photo.width}
                 height={photo.height}
                 loading={index < 4 ? 'eager' : 'lazy'}
@@ -128,7 +161,7 @@ const jsonLd = {
       </button>
       <figure class="lightbox-stage">
         <img class="lightbox-image" alt="" />
-        <figcaption class="lightbox-counter"></figcaption>
+        <figcaption class="lightbox-counter" aria-live="polite"></figcaption>
       </figure>
       <button type="button" class="lightbox-next" aria-label="Następne zdjęcie">
         <span aria-hidden="true">›</span>

@@ -1,17 +1,27 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import sharp from 'sharp';
+import { altForPhoto } from '../data/photo-alts.js';
 
 export const SITE_NAME = 'Obiektyw na Szczęście';
 export const EMAIL_TO = 'obiektywna.szczescie@gmail.com';
+// Numer podany w briefie. Nie zgaduję innego — potwierdź go przed dalszą promocją strony.
 export const PHONE = '+48500100200';
 export const PHONE_LABEL = '+48 500 100 200';
 export const INSTAGRAM_URL = 'https://www.instagram.com/obiektywna.szczescie/';
 export const INSTAGRAM_HANDLE = '@obiektywna.szczescie';
+export const NAV_LINKS = [
+  { href: '/#portfolio', label: 'Portfolio' },
+  { href: '/#oferta', label: 'Oferta' },
+  { href: '/#o-mnie', label: 'O mnie' },
+  { href: '/#kontakt', label: 'Kontakt' }
+];
 export const DEFAULT_DESCRIPTION =
   'Fotografia portretowa, biznesowa i reportażowa. Sesje, śluby, komunie, eventy i sport — Obiektyw na Szczęście.';
-export const DEFAULT_OG_IMAGE = '/zdjecia/hero/tlo.jpg';
+export const DEFAULT_OG_IMAGE = '/og.jpg';
 export const OG_IMAGE_WIDTH = 1200;
 export const OG_IMAGE_HEIGHT = 630;
+export const OG_IMAGE_ALT = 'Obiektyw na Szczęście — kadry z sesji i reportaży';
 
 export const galleries = {
   biznesowa: {
@@ -54,57 +64,11 @@ export const galleries = {
   }
 };
 
-function jpegSize(buf) {
-  let offset = 2;
-  while (offset + 9 < buf.length) {
-    if (buf[offset] !== 0xff) break;
-    const marker = buf[offset + 1];
-    if (marker === 0xd8 || marker === 0xd9) {
-      offset += 2;
-      continue;
-    }
-    const length = buf.readUInt16BE(offset + 2);
-    if (marker >= 0xc0 && marker <= 0xc3) {
-      return {
-        height: buf.readUInt16BE(offset + 5),
-        width: buf.readUInt16BE(offset + 7)
-      };
-    }
-    offset += 2 + length;
-  }
-  return null;
-}
-
-function pngSize(buf) {
-  if (buf.length < 24) return null;
-  return {
-    width: buf.readUInt32BE(16),
-    height: buf.readUInt32BE(20)
-  };
-}
-
-function readHeader(filePath, maxBytes = 65536) {
-  const fd = fs.openSync(filePath, 'r');
+async function photoMeta(filePath) {
   try {
-    const buf = Buffer.alloc(Math.min(maxBytes, 65536));
-    const bytes = fs.readSync(fd, buf, 0, buf.length, 0);
-    return buf.subarray(0, bytes);
-  } finally {
-    fs.closeSync(fd);
-  }
-}
-
-function photoMeta(filePath) {
-  try {
-    const buf = readHeader(filePath);
-    const size =
-      buf[0] === 0xff && buf[1] === 0xd8
-        ? jpegSize(buf)
-        : buf[0] === 0x89 && buf[1] === 0x50
-          ? pngSize(buf)
-          : null;
-    const width = size?.width || 1200;
-    const height = size?.height || 1500;
+    const meta = await sharp(filePath).metadata();
+    const width = meta.width || 1200;
+    const height = meta.height || 1500;
     return {
       width,
       height,
@@ -115,22 +79,29 @@ function photoMeta(filePath) {
   }
 }
 
-export function listPhotos(folder) {
+export async function publicImageMeta(urlPath) {
+  const rel = String(urlPath || '').replace(/^\//, '');
+  return photoMeta(path.join(process.cwd(), 'public', rel));
+}
+
+export async function listPhotos(folder) {
   const dir = path.join(process.cwd(), 'public', 'zdjecia', 'portfolio', folder);
   if (!fs.existsSync(dir)) return [];
-  return fs
+  const names = fs
     .readdirSync(dir)
     .filter((name) => /\.(jpe?g|png|webp)$/i.test(name) && !/^okladka\./i.test(name))
-    .sort()
-    .map((name) => {
-      const filePath = path.join(dir, name);
-      const meta = photoMeta(filePath);
-      return {
-        src: `/zdjecia/portfolio/${folder}/${name}`,
-        alt: path.parse(name).name,
-        width: meta.width,
-        height: meta.height,
-        orientation: meta.orientation
-      };
+    .sort();
+  const photos = [];
+  for (let index = 0; index < names.length; index++) {
+    const name = names[index];
+    const meta = await photoMeta(path.join(dir, name));
+    photos.push({
+      src: `/zdjecia/portfolio/${folder}/${name}`,
+      alt: altForPhoto(folder, name, index, names.length),
+      width: meta.width,
+      height: meta.height,
+      orientation: meta.orientation
     });
+  }
+  return photos;
 }

@@ -1,3 +1,5 @@
+import { scrollBehavior } from './motion.js';
+
 (function () {
   const header = document.getElementById('site-header');
   if (!header) return;
@@ -21,7 +23,14 @@
     document.documentElement.style.setProperty('--header-h', headerHeight() + 'px');
   }
 
-  function setOpen(open) {
+  function syncNavInert() {
+    if (!nav) return;
+    if (isNarrow() && !header.classList.contains('is-open')) nav.setAttribute('inert', '');
+    else nav.removeAttribute('inert');
+  }
+
+  function setOpen(open, options) {
+    const returnFocus = options && options.returnFocus;
     header.classList.toggle('is-open', open);
     document.body.classList.toggle('nav-open', open);
     if (toggle) {
@@ -29,6 +38,12 @@
       toggle.setAttribute('aria-label', open ? 'Zamknij menu' : 'Otwórz menu');
     }
     if (backdrop) backdrop.hidden = !open;
+    syncNavInert();
+    if (open && isNarrow()) {
+      nav?.querySelector('a')?.focus();
+    } else if (!open && returnFocus && isNarrow()) {
+      toggle?.focus();
+    }
   }
 
   if (toggle) {
@@ -39,20 +54,20 @@
 
   if (backdrop) {
     backdrop.addEventListener('click', function () {
-      setOpen(false);
+      setOpen(false, { returnFocus: true });
     });
   }
 
   if (nav) {
     nav.querySelectorAll('a').forEach(function (link) {
       link.addEventListener('click', function () {
-        setOpen(false);
+        setOpen(false, { returnFocus: false });
       });
     });
   }
 
   window.addEventListener('keydown', function (event) {
-    if (event.key === 'Escape') setOpen(false);
+    if (event.key === 'Escape') setOpen(false, { returnFocus: true });
   });
 
   function onScroll() {
@@ -72,8 +87,7 @@
   }
 
   function scrollToTop(behavior) {
-    const mode = isNarrow() ? 'auto' : (behavior || 'smooth');
-    window.scrollTo({ top: 0, behavior: mode });
+    window.scrollTo({ top: 0, behavior: scrollBehavior(behavior) });
   }
 
   function targetTop(focus) {
@@ -85,7 +99,7 @@
     const target = document.getElementById(id);
     if (!target) return false;
     const focus = target.querySelector('.section-title, h1, h2') || target;
-    const mode = isNarrow() ? 'auto' : (behavior || 'smooth');
+    const mode = scrollBehavior(behavior);
     window.scrollTo({ top: targetTop(focus), behavior: mode });
     window.setTimeout(function () {
       const corrected = targetTop(focus);
@@ -157,7 +171,10 @@
     scrollToHash(location.hash, 'smooth');
   });
 
-  window.addEventListener('resize', updateHeaderOffset);
+  window.addEventListener('resize', function () {
+    updateHeaderOffset();
+    syncNavInert();
+  });
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', updateHeaderOffset);
   }
@@ -167,6 +184,7 @@
   }
 
   updateHeaderOffset();
+  syncNavInert();
 
   if (location.hash) {
     scrollToHash(location.hash, 'auto');

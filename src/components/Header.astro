@@ -1,10 +1,5 @@
 ---
-const links = [
-  { href: '/#portfolio', label: 'Portfolio' },
-  { href: '/#oferta', label: 'Oferta' },
-  { href: '/#o-mnie', label: 'O mnie' },
-  { href: '/#kontakt', label: 'Kontakt' }
-];
+import { NAV_LINKS } from '../lib/site.js';
 ---
 
 <header class="site-header" id="site-header">
@@ -12,9 +7,9 @@ const links = [
     <a href="/" class="logo" aria-label="Obiektyw na Szczęście — do góry strony">
       <span>OBIEKTYW NA SZCZĘŚCIE</span>
     </a>
-    <nav class="navbar" id="site-nav">
+    <nav class="navbar" id="site-nav" aria-label="Główne">
       <ul class="nav-links">
-        {links.map((link) => (
+        {NAV_LINKS.map((link) => (
           <li><a href={link.href}>{link.label}</a></li>
         ))}
       </ul>
