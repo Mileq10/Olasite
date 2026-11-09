@@ -1,12 +1,36 @@
-import { scrollBehavior } from './motion.js';
+import { initLightbox } from './lightbox.js';
+import { initReveal, scrollBehavior } from './motion.js';
 
-(function () {
+export function initNav() {
   const header = document.getElementById('site-header');
   if (!header) return;
 
   const toggle = header.querySelector('.nav-toggle');
   const nav = document.getElementById('site-nav');
   const backdrop = header.querySelector('.nav-backdrop');
+
+  function onScroll() {
+    header.classList.toggle('is-scrolled', window.scrollY > 12);
+    const toTop = document.getElementById('to-top');
+    if (toTop) toTop.hidden = window.scrollY < 500;
+    if (!nav) return;
+    const line = header.getBoundingClientRect().height + 24;
+    let current = '';
+    document.querySelectorAll('main section[id]').forEach(function (section) {
+      if (section.getBoundingClientRect().top <= line) current = section.id;
+    });
+    nav.querySelectorAll('a[href*="#"]').forEach(function (link) {
+      const id = (link.getAttribute('href') || '').split('#')[1];
+      if (id && id === current) link.setAttribute('aria-current', 'true');
+      else link.removeAttribute('aria-current');
+    });
+  }
+
+  if (header.dataset.navBound === '1') {
+    onScroll();
+    return;
+  }
+  header.dataset.navBound = '1';
   function isNarrow() {
     return window.matchMedia('(max-width: 900px)').matches;
   }
@@ -70,11 +94,24 @@ import { scrollBehavior } from './motion.js';
     if (event.key === 'Escape') setOpen(false, { returnFocus: true });
   });
 
-  function onScroll() {
+  function onScrollBound() {
     header.classList.toggle('is-scrolled', window.scrollY > 12);
+    const toTop = document.getElementById('to-top');
+    if (toTop) toTop.hidden = window.scrollY < 500;
+    if (!nav) return;
+    const line = header.getBoundingClientRect().height + 24;
+    let current = '';
+    document.querySelectorAll('main section[id]').forEach(function (section) {
+      if (section.getBoundingClientRect().top <= line) current = section.id;
+    });
+    nav.querySelectorAll('a[href*="#"]').forEach(function (link) {
+      const id = (link.getAttribute('href') || '').split('#')[1];
+      if (id && id === current) link.setAttribute('aria-current', 'true');
+      else link.removeAttribute('aria-current');
+    });
   }
-  onScroll();
-  window.addEventListener('scroll', onScroll, { passive: true });
+  onScrollBound();
+  window.addEventListener('scroll', onScrollBound, { passive: true });
 
   function sameDocument(url) {
     const here = location.pathname.replace(/\/index\.html$/i, '/').replace(/\/+$/, '') || '/';
@@ -192,4 +229,21 @@ import { scrollBehavior } from './motion.js';
       scrollToHash(location.hash, 'auto');
     });
   }
-})();
+
+  const toTop = document.getElementById('to-top');
+  if (toTop && toTop.dataset.bound !== '1') {
+    toTop.dataset.bound = '1';
+    toTop.addEventListener('click', function () {
+      scrollToTop('smooth');
+    });
+  }
+}
+
+function boot() {
+  initNav();
+  initReveal();
+  initLightbox();
+}
+
+boot();
+document.addEventListener('astro:page-load', boot);

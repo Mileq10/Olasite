@@ -13,6 +13,8 @@ export const INSTAGRAM_HANDLE = '@obiektywna.szczescie';
 export const NAV_LINKS = [
   { href: '/#portfolio', label: 'Portfolio' },
   { href: '/#oferta', label: 'Oferta' },
+  { href: '/#przebieg', label: 'Przebieg' },
+  { href: '/#pytania', label: 'Pytania' },
   { href: '/#o-mnie', label: 'O mnie' },
   { href: '/#kontakt', label: 'Kontakt' }
 ];

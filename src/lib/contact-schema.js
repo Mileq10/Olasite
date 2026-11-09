@@ -19,14 +19,26 @@ export const PACKAGE_OPTIONS = [
   { value: 'premium', label: 'Pakiet Premium' }
 ];
 
+function linkCount(value) {
+  const matches = String(value || '').match(/https?:\/\/[^\s]+|www\.[^\s]+/gi);
+  return matches ? matches.length : 0;
+}
+
 export const contactSchema = z
   .object({
     tematyka: z.enum(TEMATYKA, { error: 'Wybierz tematykę zdjęć.' }),
-    pakiet: z.string().trim().min(1, { error: 'Wybierz pakiet.' }),
+    pakiet: z
+      .string()
+      .trim()
+      .min(1, { error: 'Wybierz pakiet.' })
+      .max(32, { error: 'Wybierz pakiet.' }),
     email: z
-      .email({ error: 'Podaj poprawny adres e-mail.' })
-      .max(120, { error: 'E-mail może mieć maksymalnie 120 znaków.' }),
-    telefon: z.string(),
+      .string()
+      .trim()
+      .toLowerCase()
+      .max(120, { error: 'E-mail może mieć maksymalnie 120 znaków.' })
+      .check(z.email({ error: 'Podaj poprawny adres e-mail.' })),
+    telefon: z.string().max(20, { error: 'Podaj 9 cyfr (np. 123 123 123) albo zostaw to pole puste.' }),
     wiadomosc: z
       .string()
       .trim()
@@ -34,6 +46,15 @@ export const contactSchema = z
       .max(2000, { error: 'Wiadomość może mieć maksymalnie 2000 znaków.' })
   })
   .check((ctx) => {
+    if (linkCount(ctx.value.wiadomosc) > 2) {
+      ctx.issues.push({
+        code: 'custom',
+        input: ctx.value.wiadomosc,
+        path: ['wiadomosc'],
+        message: 'W wiadomości mogą być najwyżej dwa linki.'
+      });
+    }
+
     const digits = String(ctx.value.telefon || '').replace(/\D/g, '');
     if (digits.length > 0 && digits.length !== 9) {
       ctx.issues.push({

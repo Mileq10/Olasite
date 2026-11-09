@@ -45,3 +45,45 @@ test('reportage requires the individual package', () => {
   });
   assert.equal(bad.success, false);
 });
+
+test('email is trimmed and lowercased, and extra links are rejected', () => {
+  const ok = contactSchema.safeParse({
+    tematyka: 'portretowa',
+    pakiet: 'standard',
+    email: '  Jan@Example.com  ',
+    telefon: '',
+    wiadomosc: 'Termin: https://example.com i www.example.org.'
+  });
+  assert.equal(ok.success, true);
+  assert.equal(ok.data.email, 'jan@example.com');
+
+  const links = contactSchema.safeParse({
+    tematyka: 'portretowa',
+    pakiet: 'standard',
+    email: 'jan@example.com',
+    telefon: '',
+    wiadomosc: 'https://a.example https://b.example www.c.example'
+  });
+  assert.equal(links.success, false);
+  assert.match(links.error.issues.map((issue) => issue.message).join(' '), /dwa linki/);
+});
+
+test('telefon and pakiet reject oversized values', () => {
+  const phone = contactSchema.safeParse({
+    tematyka: 'portretowa',
+    pakiet: 'standard',
+    email: 'jan@example.com',
+    telefon: '1'.repeat(21),
+    wiadomosc: 'Termin w czerwcu.'
+  });
+  assert.equal(phone.success, false);
+
+  const pack = contactSchema.safeParse({
+    tematyka: 'portretowa',
+    pakiet: 'x'.repeat(33),
+    email: 'jan@example.com',
+    telefon: '',
+    wiadomosc: 'Termin w czerwcu.'
+  });
+  assert.equal(pack.success, false);
+});

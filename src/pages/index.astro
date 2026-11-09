@@ -2,7 +2,9 @@
 import Layout from '../layouts/Layout.astro';
 import InstagramLink from '../components/InstagramLink.astro';
 import { offerCatalogJsonLd, offerCategories, PRICE_RANGE } from '../data/offer.js';
+import { TURNSTILE_SITE_KEY } from '../lib/form-config.js';
 import { FORM_TOPICS } from '../lib/contact-schema.js';
+import { faqJsonLd, faqs } from '../data/faq.js';
 import {
   SITE_NAME,
   DEFAULT_DESCRIPTION,
@@ -37,7 +39,8 @@ const jsonLd = [
     name: SITE_NAME,
     url: pageUrl,
     inLanguage: 'pl-PL'
-  }
+  },
+  faqJsonLd()
 ];
 ---
 
@@ -87,7 +90,7 @@ const jsonLd = [
     </div>
   </section>
 
-  <section class="categories-section" id="portfolio">
+  <section class="categories-section" id="portfolio" data-reveal>
     <div class="section-inner">
       <h2 class="section-title">Portfolio</h2>
       <p class="section-lead">Wybierz kategorię, żeby zobaczyć zdjęcia z sesji i reportaży.</p>
@@ -126,7 +129,7 @@ const jsonLd = [
     </div>
   </section>
 
-  <section class="content-section offer-section" id="oferta">
+  <section class="content-section offer-section" id="oferta" data-reveal>
     <div class="section-inner">
       <h2 class="section-title">Oferta</h2>
       <p class="section-lead">Stałe pakiety na sesje portretowe i biznesowe. Reportaże wyceniam indywidualnie w podanych widełkach.</p>
@@ -174,8 +177,54 @@ const jsonLd = [
           </div>
         </div>
       ))}
+    </div>
+  </section>
 
-  <section class="content-section about-section" id="o-mnie">
+  <section class="content-section process-section" id="przebieg" data-reveal>
+    <div class="section-inner">
+      <h2 class="section-title">Jak to wygląda</h2>
+      <p class="section-lead">Od pierwszej wiadomości do gotowych kadrów. Bez ukrytych etapów.</p>
+      <ol class="process-steps">
+        <li>
+          <span>1</span>
+          <h3>Kontakt</h3>
+          <p>Piszesz, jakiej sesji potrzebujesz, albo dzwonisz.</p>
+        </li>
+        <li>
+          <span>2</span>
+          <h3>Rozmowa</h3>
+          <p>Ustalamy oczekiwania, termin i zakres zdjęć.</p>
+        </li>
+        <li>
+          <span>3</span>
+          <h3>Zdjęcia</h3>
+          <p>Sesja albo reportaż, spokojnie i bez pośpiechu.</p>
+        </li>
+        <li>
+          <span>4</span>
+          <h3>Kadry</h3>
+          <p>Dostajesz wybrane zdjęcia i galerię online.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="content-section faq-section" id="pytania" data-reveal>
+    <div class="section-inner">
+      <h2 class="section-title">Pytania</h2>
+      <p class="section-lead">Krótko o cenach i o tym, jak się umówić. Szczegóły pakietów są w ofercie.</p>
+      <div class="faq-list">
+        {faqs.map((item) => (
+          <details>
+            <summary>{item.question}</summary>
+            <p>{item.answer}</p>
+          </details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="content-section about-section" id="o-mnie" data-reveal>
     <div class="section-inner">
       <h2 class="section-title">O mnie</h2>
       <p class="section-lead">Kilka słów o tym, kto stoi za obiektywem.</p>
@@ -199,16 +248,26 @@ const jsonLd = [
     </div>
   </section>
 
-  <section class="content-section contact-section" id="kontakt">
+  <section class="content-section contact-section" id="kontakt" data-reveal>
     <div class="section-inner">
       <h2 class="section-title">Kontakt</h2>
       <p class="section-lead">Napisz, jaki rodzaj sesji Cię interesuje — odezwę się z propozycją terminu.</p>
       <div class="contact-grid">
-        <form class="contact-form" id="contact-form" autocomplete="on" novalidate>
+        <form
+          class="contact-form"
+          id="contact-form"
+          autocomplete="on"
+          novalidate
+          data-contact-email={EMAIL_TO}
+          data-contact-phone={PHONE}
+          data-contact-phone-label={PHONE_LABEL}
+          data-turnstile-sitekey={TURNSTILE_SITE_KEY}
+        >
           <div class="hp" inert>
-            <label for="botcheck">Nie wypełniaj tego pola</label>
-            <input type="text" id="botcheck" name="botcheck" tabindex="-1" autocomplete="off" />
+            <label for="fax_number">Nie wypełniaj tego pola</label>
+            <input type="text" id="fax_number" name="fax_number" tabindex="-1" autocomplete="off" maxlength="80" />
           </div>
+          <div id="form-error-summary" class="form-error-summary" role="alert" tabindex="-1" hidden></div>
           <div class="form-field" data-field="tematyka">
             <label for="tematyka">Tematyka zdjęć <span class="req" aria-hidden="true">*</span><span class="visually-hidden"> wymagane</span></label>
             <select name="tematyka" id="tematyka" required aria-required="true" aria-describedby="error-tematyka">
@@ -224,14 +283,14 @@ const jsonLd = [
                 </optgroup>
               ))}
             </select>
-            <p class="field-error" id="error-tematyka" role="alert" hidden></p>
+            <p class="field-error" id="error-tematyka" hidden></p>
           </div>
           <div class="form-field" data-field="pakiet">
             <label for="pakiet">Pakiet <span class="req" aria-hidden="true">*</span><span class="visually-hidden"> wymagane</span></label>
             <select name="pakiet" id="pakiet" required aria-required="true" disabled aria-describedby="error-pakiet">
               <option value="" disabled selected>Najpierw wybierz tematykę</option>
             </select>
-            <p class="field-error" id="error-pakiet" role="alert" hidden></p>
+            <p class="field-error" id="error-pakiet" hidden></p>
           </div>
           <div class="form-field" data-field="email">
             <label for="email">Adres e-mail <span class="req" aria-hidden="true">*</span><span class="visually-hidden"> wymagane</span></label>
@@ -247,7 +306,7 @@ const jsonLd = [
               placeholder="np. jan@example.com"
               aria-describedby="error-email"
             />
-            <p class="field-error" id="error-email" role="alert" hidden></p>
+            <p class="field-error" id="error-email" hidden></p>
           </div>
           <div class="form-field" data-field="telefon">
             <label for="telefon">Numer telefonu (opcjonalnie)</label>
@@ -264,18 +323,19 @@ const jsonLd = [
                 aria-describedby="error-telefon form-hint-telefon"
               />
             </div>
-            <p class="field-error" id="error-telefon" role="alert" hidden></p>
+            <p class="field-error" id="error-telefon" hidden></p>
           </div>
           <p class="form-hint" id="form-hint-telefon">Numer jest opcjonalny.</p>
           <div class="form-field" data-field="wiadomosc">
             <label for="wiadomosc">Wiadomość <span class="req" aria-hidden="true">*</span><span class="visually-hidden"> wymagane</span></label>
             <textarea id="wiadomosc" name="wiadomosc" rows="5" required aria-required="true" maxlength="2000" placeholder="Napisz, czego potrzebujesz i jaki termin Ci pasuje." aria-describedby="error-wiadomosc"></textarea>
-            <p class="field-error" id="error-wiadomosc" role="alert" hidden></p>
+            <p class="field-error" id="error-wiadomosc" hidden></p>
           </div>
           <p class="form-disclaimer">
-            Klikając <strong>Wyślij zapytanie</strong>, akceptujesz regulamin oraz
-            <a href="/polityka-prywatnosci">Politykę prywatności</a>.
+            Wysyłając zapytanie, prosisz o odpowiedź w sprawie sesji. Zasady przetwarzania danych opisuje
+            <a href="/polityka-prywatnosci">Polityka prywatności</a>.
           </p>
+          <div id="turnstile-slot" class="turnstile-slot"></div>
           <button type="submit" class="btn btn-primary" id="form-submit">Wyślij zapytanie</button>
           <p class="form-success" id="form-success" hidden role="status" aria-live="polite">
             <strong>Wiadomość wysłana.</strong>
@@ -283,10 +343,12 @@ const jsonLd = [
           </p>
           <p class="form-error" id="form-error" hidden role="alert"></p>
           <p class="rodo-note">
-            Administratorem danych jest Obiektyw na Szczęście. Przetwarzamy tematykę, pakiet, adres e-mail i treść wiadomości,
-            a numer telefonu tylko jeśli go podasz. Dane służą obsłudze zapytania. Masz prawo dostępu do danych,
-            ich sprostowania, usunięcia, ograniczenia przetwarzania oraz wniesienia sprzeciwu.
-            Podanie wiadomości jest niezbędne do kontaktu zwrotnego. Szczegóły znajdziesz w
+            Administratorem danych jest Obiektyw na Szczęście. W sprawie danych napisz na
+            <a href={`mailto:${EMAIL_TO}`}>{EMAIL_TO}</a>.
+            Przetwarzamy tematykę, pakiet, adres e-mail i treść wiadomości, a numer telefonu tylko jeśli go podasz,
+            żeby odpowiedzieć na zapytanie (art. 6 ust. 1 lit. b i f RODO).
+            Korespondencję bez współpracy przechowujemy przez 12 miesięcy od ostatniego kontaktu.
+            Szczegóły, w tym odbiorca Web3Forms, są w
             <a href="/polityka-prywatnosci">Polityce prywatności</a>.
           </p>
         </form>

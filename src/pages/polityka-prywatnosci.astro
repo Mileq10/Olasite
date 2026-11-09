@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { SITE_NAME, PHONE_LABEL } from '../lib/site.js';
+import { SITE_NAME, EMAIL_TO, PHONE, PHONE_LABEL } from '../lib/site.js';
 ---
 
 <Layout
@@ -14,8 +14,10 @@ import { SITE_NAME, PHONE_LABEL } from '../lib/site.js';
 
       <h2>1. Administrator danych</h2>
       <p>
-        Administratorem danych osobowych jest Obiektyw na Szczęście. W sprawach dotyczących ochrony danych
-        można kontaktować się telefonicznie pod numerem {PHONE_LABEL} lub przez formularz na stronie.
+        Administratorem danych osobowych jest {SITE_NAME}. Na tej stronie nie publikujemy odrębnej nazwy
+        przedsiębiorstwa ani adresu korespondencyjnego. W sprawach ochrony danych napisz na
+        <a href={`mailto:${EMAIL_TO}`}>{EMAIL_TO}</a>
+        albo zadzwoń pod <a href={`tel:${PHONE}`}>{PHONE_LABEL}</a>.
       </p>
 
       <h2>2. Jakie dane zbieramy</h2>
@@ -26,26 +28,47 @@ import { SITE_NAME, PHONE_LABEL } from '../lib/site.js';
 
       <h2>3. Cel i podstawa prawna</h2>
       <p>
-        Dane są przetwarzane w celu odpowiedzi na zapytanie i umówienia sesji.
-        Podstawą jest art. 6 ust. 1 lit. a RODO (zgoda wyrażona przez kliknięcie „Wyślij zapytanie”)
-        oraz art. 6 ust. 1 lit. b RODO (działania przed zawarciem umowy na żądanie osoby, której dane dotyczą).
+        Dane służą odpowiedzi na zapytanie i ustaleniu terminu sesji. Są to działania przed zawarciem umowy,
+        podejmowane na Twoje żądanie — art. 6 ust. 1 lit. b RODO. Utrzymanie korespondencji i ochrona przed
+        roszczeniami opierają się na prawnie uzasadnionym interesie administratora — art. 6 ust. 1 lit. f RODO.
       </p>
 
       <h2>4. Okres przechowywania</h2>
       <p>
-        Dane z formularza przechowujemy do czasu zakończenia korespondencji, a jeśli dojdzie do współpracy —
-        przez czas realizacji zlecenia i okres wymagany przepisami podatkowymi.
+        Jeśli nie dojdzie do współpracy, korespondencję usuwamy po 12 miesiącach od ostatniego kontaktu.
+        Gdy dojdzie do zlecenia, dane przechowujemy przez czas jego realizacji oraz przez okres wymagany
+        przepisami podatkowymi.
       </p>
 
-      <h2>5. Twoje prawa</h2>
-      <p>Przysługuje Ci prawo dostępu do danych, ich sprostowania, usunięcia, ograniczenia przetwarzania, przenoszenia oraz wniesienia sprzeciwu. Masz też prawo wnieść skargę do Prezesa Urzędu Ochrony Danych Osobowych.</p>
-
-      <h2>6. Dobrowolność</h2>
-      <p>Podanie danych jest dobrowolne, ale niezbędne, abyśmy mogli się z Tobą skontaktować.</p>
-
-      <h2>7. Czcionki</h2>
+      <h2>5. Odbiorca i przekazanie poza EOG</h2>
       <p>
-        Strona korzysta z czcionek Google Fonts. Nie stosujemy plików cookies analitycznych ani narzędzi śledzących.
+        Zgłoszenie z formularza odbiera Web3Forms, usługa prowadzona przez Web3Creative (Indie). Web3Creative
+        jest podmiotem przetwarzającym: przyjmuje treść formularza i przekazuje ją na adres e-mail administratora.
+        Według umowy powierzenia dane mogą być przetwarzane poza Europejskim Obszarem Gospodarczym, w Indiach
+        oraz u podwykonawców, w tym w infrastrukturze Amazon Web Services i w filtrach antyspamowych w Stanach
+        Zjednoczonych. Przekazanie opiera się na standardowych klauzulach umownych włączonych do tej umowy.
+      </p>
+      <p>
+        <a href="https://web3forms.com/dpa" target="_blank" rel="noopener noreferrer">
+          Umowa powierzenia przetwarzania Web3Forms
+          <span class="visually-hidden"> (otwiera się w nowej karcie)</span>
+        </a>
+      </p>
+
+      <h2>6. Twoje prawa</h2>
+      <p>
+        Przysługuje Ci prawo dostępu do danych, ich sprostowania, usunięcia, ograniczenia przetwarzania,
+        przenoszenia oraz wniesienia sprzeciwu — w szczególności wobec przetwarzania opartego na prawnie
+        uzasadnionym interesie. Masz też prawo wnieść skargę do Prezesa Urzędu Ochrony Danych Osobowych.
+      </p>
+
+      <h2>7. Dobrowolność</h2>
+      <p>Podanie danych jest dobrowolne, ale bez adresu e-mail i treści wiadomości nie da się odpowiedzieć na zapytanie.</p>
+
+      <h2>8. Czcionki i cookies</h2>
+      <p>
+        Czcionki są plikami tej strony. Wejście na stronę nie wysyła zapytania do Google. Nie stosujemy plików
+        cookies analitycznych ani narzędzi śledzących.
       </p>
     </div>
   </div>

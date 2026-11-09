@@ -4,6 +4,8 @@ export function initOffer() {
   const tematykaSelect = document.getElementById('tematyka');
   const pakietSelect = document.getElementById('pakiet');
   if (!tematykaSelect || !pakietSelect) return;
+  if (tematykaSelect.dataset.bound === '1') return { updatePakietOptions };
+  tematykaSelect.dataset.bound = '1';
 
   function updatePakietOptions() {
     const tematyka = tematykaSelect.value;
@@ -90,6 +92,10 @@ export function initOffer() {
 
   offerMedia.addEventListener('change', syncOfferAria);
   syncOfferAria();
+
+  const params = new URLSearchParams(window.location.search);
+  const requestedTopic = params.get('tematyka');
+  if (requestedTopic) fillForm(requestedTopic, params.get('pakiet'));
 
   return { updatePakietOptions };
 }

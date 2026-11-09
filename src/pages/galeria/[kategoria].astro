@@ -63,24 +63,26 @@ const jsonLd = [
           }
         ])
     ]
-  }
+  },
+  ...(photos.length
+    ? [
+        {
+          '@context': 'https://schema.org',
+          '@type': 'ImageGallery',
+          name: gallery.title,
+          description,
+          url: pageUrl,
+          image: photos.slice(0, 12).map((photo) => ({
+            '@type': 'ImageObject',
+            contentUrl: new URL(photo.src, origin).href,
+            name: photo.alt,
+            width: photo.width,
+            height: photo.height
+          }))
+        }
+      ]
+    : [])
 ];
-if (photos.length) {
-  jsonLd.push({
-    '@context': 'https://schema.org',
-    '@type': 'ImageGallery',
-    name: gallery.title,
-    description,
-    url: pageUrl,
-    image: photos.slice(0, 12).map((photo) => ({
-      '@type': 'ImageObject',
-      contentUrl: new URL(photo.src, origin).href,
-      name: photo.alt,
-      width: photo.width,
-      height: photo.height
-    }))
-  });
-}
 ---
 
 <Layout
@@ -169,8 +171,3 @@ if (photos.length) {
     </div>
   )}
 </Layout>
-
-<script>
-  import { initLightbox } from '../../scripts/lightbox.js';
-  initLightbox();
-</script>

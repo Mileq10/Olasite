@@ -4,6 +4,8 @@ export function initLightbox(root = document) {
 
   const items = Array.from(grid.querySelectorAll('[data-index]'));
   if (!items.length) return;
+  if (grid.dataset.ready === '1') return;
+  grid.dataset.ready = '1';
 
   items.forEach((item) => {
     const img = item.querySelector('img');
