@@ -5,14 +5,20 @@ import { SITE_NAME } from '../lib/site.js';
 
 <Layout
   title={`Strona nie istnieje | ${SITE_NAME}`}
-  description="Nie znaleziono tej strony. Wróć na stronę główną Obiektyw na Szczęście."
+  description="Nie znaleziono tej strony. Wróć do galerii albo napisz w sprawie sesji."
   noindex={true}
 >
   <div class="privacy-page">
     <div class="section-inner">
       <h1>Nie znaleziono strony</h1>
       <p class="section-lead">Ten adres nie istnieje albo galeria została przeniesiona.</p>
-      <a class="gallery-back" href="/">← Wróć na stronę główną</a>
+      <ul class="missing-links">
+        <li><a href="/">Strona główna</a></li>
+        <li><a href="/galeria/biznesowa">Sesja biznesowa</a></li>
+        <li><a href="/galeria/portretowa">Sesja portretowa</a></li>
+        <li><a href="/galeria/wydarzenia">Reportaże</a></li>
+        <li><a href="/#kontakt">Kontakt</a></li>
+      </ul>
     </div>
   </div>
 </Layout>

@@ -5,6 +5,7 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://obiektywnaszczescie.pl',
   output: 'static',
+  trailingSlash: 'always',
   server: {
     host: true,
     port: 4321
@@ -19,6 +20,7 @@ export default defineConfig({
   ],
   redirects: {
     '/polityka-prywatnosci.html': '/polityka-prywatnosci',
+    '/galeria': '/galeria/biznesowa',
     '/galeria/eventy': '/galeria/eventy-sport',
     '/galeria/sport': '/galeria/eventy-sport'
   }

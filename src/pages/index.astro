@@ -1,42 +1,54 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import InstagramLink from '../components/InstagramLink.astro';
+import { offerCatalogJsonLd, offerCategories, PRICE_RANGE } from '../data/offer.js';
+import { TURNSTILE_SITE_KEY } from '../lib/form-config.js';
+import { FORM_TOPICS } from '../lib/contact-schema.js';
+import { faqJsonLd, faqs } from '../data/faq.js';
 import {
   SITE_NAME,
   DEFAULT_DESCRIPTION,
   EMAIL_TO,
   PHONE,
   PHONE_LABEL,
-  INSTAGRAM_URL
+  INSTAGRAM_URL,
+  OG_IMAGE_ALT
 } from '../lib/site.js';
 
+const pageUrl = new URL('/', Astro.site ?? Astro.url).href;
+const topicGroups = [...new Set(FORM_TOPICS.map((topic) => topic.group).filter(Boolean))];
 const jsonLd = [
   {
     '@context': 'https://schema.org',
     '@type': 'ProfessionalService',
     name: SITE_NAME,
     description: DEFAULT_DESCRIPTION,
-    url: Astro.site?.href,
+    url: pageUrl,
     email: EMAIL_TO,
     telephone: PHONE,
-    image: new URL('/zdjecia/hero/tlo.jpg', Astro.site ?? Astro.url).href,
+    image: new URL('/og.jpg', Astro.site ?? Astro.url).href,
     sameAs: [INSTAGRAM_URL],
     areaServed: 'PL',
-    serviceType: ['Fotografia portretowa', 'Fotografia biznesowa', 'Reportaż']
+    priceRange: PRICE_RANGE,
+    serviceType: ['Fotografia portretowa', 'Fotografia biznesowa', 'Reportaż'],
+    hasOfferCatalog: offerCatalogJsonLd(new URL('/#oferta', Astro.site ?? Astro.url).href)
   },
   {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: SITE_NAME,
-    url: Astro.site?.href,
+    url: pageUrl,
     inLanguage: 'pl-PL'
-  }
+  },
+  faqJsonLd()
 ];
 ---
 
 <Layout
-  title={`Fotografia portretowa, biznesowa i reportażowa | ${SITE_NAME}`}
+  title={`Fotograf sesji i reportaży | ${SITE_NAME}`}
   description={DEFAULT_DESCRIPTION}
+  imageAlt={OG_IMAGE_ALT}
+  preloadImage={true}
   jsonLd={jsonLd}
 >
   <section class="hero-section" id="home">
@@ -45,7 +57,7 @@ const jsonLd = [
       src="/zdjecia/hero/tlo.jpg"
       alt=""
       width="1920"
-      height="1080"
+      height="1282"
       fetchpriority="high"
       decoding="async"
     />
@@ -65,20 +77,20 @@ const jsonLd = [
         </div>
         <div class="hero-gallery">
           <div class="gallery-item item-1">
-            <img src="/zdjecia/hero/1.jpg" alt="Sesja rodzinna" width="800" height="1000" decoding="async" />
+            <img src="/zdjecia/hero/1.jpg" alt="Rodzina na sesji plenerowej" width="800" height="1000" decoding="async" />
           </div>
           <div class="gallery-item item-2">
-            <img src="/zdjecia/hero/2.jpg" alt="Portret kobiety" width="800" height="1000" decoding="async" />
+            <img src="/zdjecia/hero/2.jpg" alt="Portret kobiety w studyjnym świetle" width="800" height="1000" decoding="async" />
           </div>
           <div class="gallery-item item-3">
-            <img src="/zdjecia/hero/3.jpg" alt="Kobieta w ogrodzie" width="1200" height="800" decoding="async" />
+            <img src="/zdjecia/hero/3.jpg" alt="Portret kobiety w ogrodzie" width="1200" height="800" decoding="async" />
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="categories-section" id="portfolio">
+  <section class="categories-section" id="portfolio" data-reveal>
     <div class="section-inner">
       <h2 class="section-title">Portfolio</h2>
       <p class="section-lead">Wybierz kategorię, żeby zobaczyć zdjęcia z sesji i reportaży.</p>
@@ -117,198 +129,102 @@ const jsonLd = [
     </div>
   </section>
 
-  <section class="content-section offer-section" id="oferta">
+  <section class="content-section offer-section" id="oferta" data-reveal>
     <div class="section-inner">
       <h2 class="section-title">Oferta</h2>
       <p class="section-lead">Stałe pakiety na sesje portretowe i biznesowe. Reportaże wyceniam indywidualnie w podanych widełkach.</p>
 
-      <div class="offer-category">
-        <button type="button" class="offer-category-head" aria-expanded="true">
-          <span class="block-label">Portret</span>
-          <span class="offer-category-title">Sesja portretowa</span>
-          <span class="offer-toggle" aria-hidden="true"></span>
-        </button>
-        <div class="offer-category-body">
-          <div class="offer-grid">
-            <article class="offer-card">
-              <p class="block-label">Mini</p>
-              <p class="offer-price">400 zł</p>
-              <ul>
-                <li>1 godzina zdjęć</li>
-                <li>15 wyretuszowanych zdjęć</li>
-                <li>1 lokalizacja</li>
-                <li>Galeria online</li>
-              </ul>
-              <a href="#kontakt" class="btn btn-secondary js-fill-form" data-tematyka="portretowa" data-pakiet="mini">
-                <span class="btn-text-long">Zapytaj o ten pakiet</span>
-                <span class="btn-text-short">Wybierz</span>
-              </a>
-            </article>
-            <article class="offer-card offer-card--featured">
-              <span class="offer-badge">Najczęściej wybierany</span>
-              <p class="block-label">Standard</p>
-              <p class="offer-price">750 zł</p>
-              <ul>
-                <li>2 godziny zdjęć</li>
-                <li>40 wyretuszowanych zdjęć</li>
-                <li>Do 2 lokalizacji</li>
-                <li>Konsultacja stylizacji</li>
-              </ul>
-              <a href="#kontakt" class="btn btn-primary js-fill-form" data-tematyka="portretowa" data-pakiet="standard">
-                <span class="btn-text-long">Zapytaj o ten pakiet</span>
-                <span class="btn-text-short">Wybierz</span>
-              </a>
-            </article>
-            <article class="offer-card">
-              <p class="block-label">Premium</p>
-              <p class="offer-price">1200 zł</p>
-              <ul>
-                <li>3 godziny zdjęć</li>
-                <li>80 wyretuszowanych zdjęć</li>
-                <li>Kilka aranżacji</li>
-                <li>Priorytetowa edycja</li>
-              </ul>
-              <a href="#kontakt" class="btn btn-secondary js-fill-form" data-tematyka="portretowa" data-pakiet="premium">
-                <span class="btn-text-long">Zapytaj o ten pakiet</span>
-                <span class="btn-text-short">Wybierz</span>
-              </a>
-            </article>
+      {offerCategories.map((category) => (
+        <div class="offer-category">
+          <button
+            type="button"
+            class="offer-category-head"
+            id={category.id}
+            aria-controls={`${category.id}-panel`}
+            aria-expanded="true"
+          >
+            <span class="block-label">{category.label}</span>
+            <span class="offer-category-title">{category.title}</span>
+            <span class="offer-toggle" aria-hidden="true"></span>
+          </button>
+          <div class="offer-category-body" id={`${category.id}-panel`} role="region" aria-labelledby={category.id}>
+            <div class:list={['offer-grid', category.ranges && 'offer-grid--ranges']}>
+              {category.packages.map((pkg) => (
+                <article class:list={['offer-card', pkg.featured && 'offer-card--featured']}>
+                  {pkg.badge && <span class="offer-badge">{pkg.badge}</span>}
+                  <p class="block-label">{pkg.name}</p>
+                  <p class="offer-price">{pkg.priceLabel}</p>
+                  {pkg.note && <p class="offer-note">{pkg.note}</p>}
+                  <ul>
+                    {pkg.items.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                  <a
+                    href="#kontakt"
+                    class:list={['btn', pkg.featured ? 'btn-primary' : 'btn-secondary', 'js-fill-form']}
+                    data-tematyka={pkg.tematyka}
+                    data-pakiet={pkg.pakiet}
+                    aria-label={`${pkg.ctaLong}: ${category.title}, pakiet ${pkg.name}`}
+                  >
+                    <span class="btn-text-long">{pkg.ctaLong}</span>
+                    <span class="btn-text-short" aria-hidden="true">{pkg.ctaShort}</span>
+                  </a>
+                </article>
+              ))}
+            </div>
+            {category.disclaimer && <p class="offer-disclaimer">{category.disclaimer}</p>}
           </div>
         </div>
-      </div>
+      ))}
+    </div>
+  </section>
 
-      <div class="offer-category">
-        <button type="button" class="offer-category-head" aria-expanded="true">
-          <span class="block-label">Biznes</span>
-          <span class="offer-category-title">Sesja biznesowa</span>
-          <span class="offer-toggle" aria-hidden="true"></span>
-        </button>
-        <div class="offer-category-body">
-          <div class="offer-grid">
-            <article class="offer-card">
-              <p class="block-label">Mini</p>
-              <p class="offer-price">450 zł</p>
-              <ul>
-                <li>1 godzina zdjęć</li>
-                <li>10 zdjęć do LinkedIn / strony</li>
-                <li>1 tło lub lokalizacja</li>
-                <li>Wersje kolor i czarno-białe</li>
-              </ul>
-              <a href="#kontakt" class="btn btn-secondary js-fill-form" data-tematyka="biznesowa" data-pakiet="mini">
-                <span class="btn-text-long">Zapytaj o ten pakiet</span>
-                <span class="btn-text-short">Wybierz</span>
-              </a>
-            </article>
-            <article class="offer-card offer-card--featured">
-              <span class="offer-badge">Najczęściej wybierany</span>
-              <p class="block-label">Standard</p>
-              <p class="offer-price">850 zł</p>
-              <ul>
-                <li>2 godziny zdjęć</li>
-                <li>30 zdjęć indywidualnych lub zespołowych</li>
-                <li>2 aranżacje</li>
-                <li>Pliki do druku i social mediów</li>
-              </ul>
-              <a href="#kontakt" class="btn btn-primary js-fill-form" data-tematyka="biznesowa" data-pakiet="standard">
-                <span class="btn-text-long">Zapytaj o ten pakiet</span>
-                <span class="btn-text-short">Wybierz</span>
-              </a>
-            </article>
-            <article class="offer-card">
-              <p class="block-label">Premium</p>
-              <p class="offer-price">1400 zł</p>
-              <ul>
-                <li>3 godziny zdjęć</li>
-                <li>60 zdjęć marki / zespołu</li>
-                <li>Kilka lokalizacji</li>
-                <li>Konsultacja wizerunkowa</li>
-              </ul>
-              <a href="#kontakt" class="btn btn-secondary js-fill-form" data-tematyka="biznesowa" data-pakiet="premium">
-                <span class="btn-text-long">Zapytaj o ten pakiet</span>
-                <span class="btn-text-short">Wybierz</span>
-              </a>
-            </article>
-          </div>
-        </div>
-      </div>
+  <section class="content-section process-section" id="przebieg" data-reveal>
+    <div class="section-inner">
+      <h2 class="section-title">Jak to wygląda</h2>
+      <p class="section-lead">Od pierwszej wiadomości do gotowych kadrów. Bez ukrytych etapów.</p>
+      <ol class="process-steps">
+        <li>
+          <span>1</span>
+          <h3>Kontakt</h3>
+          <p>Piszesz, jakiej sesji potrzebujesz, albo dzwonisz.</p>
+        </li>
+        <li>
+          <span>2</span>
+          <h3>Rozmowa</h3>
+          <p>Ustalamy oczekiwania, termin i zakres zdjęć.</p>
+        </li>
+        <li>
+          <span>3</span>
+          <h3>Zdjęcia</h3>
+          <p>Sesja albo reportaż, spokojnie i bez pośpiechu.</p>
+        </li>
+        <li>
+          <span>4</span>
+          <h3>Kadry</h3>
+          <p>Dostajesz wybrane zdjęcia i galerię online.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
 
-      <div class="offer-category">
-        <button type="button" class="offer-category-head" aria-expanded="true">
-          <span class="block-label">Reportaże</span>
-          <span class="offer-category-title">Reportaże z wydarzeń</span>
-          <span class="offer-toggle" aria-hidden="true"></span>
-        </button>
-        <div class="offer-category-body">
-          <div class="offer-grid offer-grid--ranges">
-            <article class="offer-card">
-              <p class="block-label">Ślubne</p>
-              <p class="offer-price">2800–8500 zł</p>
-              <p class="offer-note">Widełki cenowe</p>
-              <ul>
-                <li>Przygotowania, ceremonia, wesele</li>
-                <li>Zakres ustalany indywidualnie</li>
-                <li>Galeria online dla gości</li>
-              </ul>
-              <a href="#kontakt" class="btn btn-secondary js-fill-form" data-tematyka="slubne" data-pakiet="indywidualna">
-                <span class="btn-text-long">Zapytaj o wycenę</span>
-                <span class="btn-text-short">Wycena</span>
-              </a>
-            </article>
-            <article class="offer-card offer-card--featured">
-              <span class="offer-badge">Popularne</span>
-              <p class="block-label">Komunie</p>
-              <p class="offer-price">800–2000 zł</p>
-              <p class="offer-note">Widełki cenowe</p>
-              <ul>
-                <li>Uroczystość i przyjęcie</li>
-                <li>Zdjęcia rodzinne i reportaż</li>
-                <li>Czas trwania do uzgodnienia</li>
-              </ul>
-              <a href="#kontakt" class="btn btn-primary js-fill-form" data-tematyka="komunie" data-pakiet="indywidualna">
-                <span class="btn-text-long">Zapytaj o wycenę</span>
-                <span class="btn-text-short">Wycena</span>
-              </a>
-            </article>
-            <article class="offer-card">
-              <p class="block-label">Eventy</p>
-              <p class="offer-price">700–2500 zł</p>
-              <p class="offer-note">Widełki cenowe</p>
-              <ul>
-                <li>Konferencje, imprezy, gale</li>
-                <li>Cena zależy od długości wydarzenia</li>
-                <li>Zdjęcia do publikacji</li>
-              </ul>
-              <a href="#kontakt" class="btn btn-secondary js-fill-form" data-tematyka="eventy" data-pakiet="indywidualna">
-                <span class="btn-text-long">Zapytaj o wycenę</span>
-                <span class="btn-text-short">Wycena</span>
-              </a>
-            </article>
-            <article class="offer-card">
-              <p class="block-label">Sport</p>
-              <p class="offer-price">600–2200 zł</p>
-              <p class="offer-note">Widełki cenowe</p>
-              <ul>
-                <li>Zawody, mecze, relacje</li>
-                <li>Cena zależy od miejsca i czasu</li>
-                <li>Kadry do mediów i social mediów</li>
-              </ul>
-              <a href="#kontakt" class="btn btn-secondary js-fill-form" data-tematyka="sport" data-pakiet="indywidualna">
-                <span class="btn-text-long">Zapytaj o wycenę</span>
-                <span class="btn-text-short">Wycena</span>
-              </a>
-            </article>
-          </div>
-          <p class="offer-disclaimer">
-            Podane kwoty to orientacyjne widełki, a nie stały cennik. Ostateczna wycena jest zawsze indywidualna
-            i zależy od podkategorii, liczby godzin, liczby fotografów, lokalizacji oraz zakresu zdjęć.
-            Po krótkiej rozmowie przygotuję konkretną ofertę.
-          </p>
-        </div>
+  <section class="content-section faq-section" id="pytania" data-reveal>
+    <div class="section-inner">
+      <h2 class="section-title">Pytania</h2>
+      <p class="section-lead">Krótko o cenach i o tym, jak się umówić. Szczegóły pakietów są w ofercie.</p>
+      <div class="faq-list">
+        {faqs.map((item) => (
+          <details>
+            <summary>{item.question}</summary>
+            <p>{item.answer}</p>
+          </details>
+        ))}
       </div>
     </div>
   </section>
 
-  <section class="content-section about-section" id="o-mnie">
+  <section class="content-section about-section" id="o-mnie" data-reveal>
     <div class="section-inner">
       <h2 class="section-title">O mnie</h2>
       <p class="section-lead">Kilka słów o tym, kto stoi za obiektywem.</p>
@@ -332,46 +248,58 @@ const jsonLd = [
     </div>
   </section>
 
-  <section class="content-section contact-section" id="kontakt">
+  <section class="content-section contact-section" id="kontakt" data-reveal>
     <div class="section-inner">
       <h2 class="section-title">Kontakt</h2>
       <p class="section-lead">Napisz, jaki rodzaj sesji Cię interesuje — odezwę się z propozycją terminu.</p>
       <div class="contact-grid">
-        <form class="contact-form" id="contact-form" autocomplete="on" novalidate>
-          <div class="hp" aria-hidden="true">
-            <label>
-              Nie wypełniaj tego pola
-              <input type="text" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true" />
-            </label>
+        <form
+          class="contact-form"
+          id="contact-form"
+          autocomplete="on"
+          novalidate
+          data-contact-email={EMAIL_TO}
+          data-contact-phone={PHONE}
+          data-contact-phone-label={PHONE_LABEL}
+          data-turnstile-sitekey={TURNSTILE_SITE_KEY}
+        >
+          <div class="hp" inert>
+            <label for="fax_number">Nie wypełniaj tego pola</label>
+            <input type="text" id="fax_number" name="fax_number" tabindex="-1" autocomplete="off" maxlength="80" />
           </div>
-          <label class="form-field" data-field="tematyka">
-            <span>Tematyka zdjęć</span>
-            <select name="tematyka" id="tematyka" aria-describedby="error-tematyka">
+          <div id="form-error-summary" class="form-error-summary" role="alert" tabindex="-1" hidden></div>
+          <div class="form-field" data-field="tematyka">
+            <label for="tematyka">Tematyka zdjęć <span class="req" aria-hidden="true">*</span><span class="visually-hidden"> wymagane</span></label>
+            <select name="tematyka" id="tematyka" required aria-required="true" aria-describedby="error-tematyka">
               <option value="" disabled selected>Wybierz kategorię</option>
-              <option value="portretowa">Sesja portretowa</option>
-              <option value="biznesowa">Sesja biznesowa</option>
-              <optgroup label="Reportaże z wydarzeń">
-                <option value="slubne">Ślubne</option>
-                <option value="komunie">Komunijne</option>
-                <option value="eventy">Eventy</option>
-                <option value="sport">Sport</option>
-              </optgroup>
+              {FORM_TOPICS.filter((topic) => !topic.group).map((topic) => (
+                <option value={topic.value}>{topic.label}</option>
+              ))}
+              {topicGroups.map((group) => (
+                <optgroup label={group}>
+                  {FORM_TOPICS.filter((topic) => topic.group === group).map((topic) => (
+                    <option value={topic.value}>{topic.label}</option>
+                  ))}
+                </optgroup>
+              ))}
             </select>
             <p class="field-error" id="error-tematyka" hidden></p>
-          </label>
-          <label class="form-field" data-field="pakiet">
-            <span>Pakiet</span>
-            <select name="pakiet" id="pakiet" disabled aria-describedby="error-pakiet">
+          </div>
+          <div class="form-field" data-field="pakiet">
+            <label for="pakiet">Pakiet <span class="req" aria-hidden="true">*</span><span class="visually-hidden"> wymagane</span></label>
+            <select name="pakiet" id="pakiet" required aria-required="true" disabled aria-describedby="error-pakiet">
               <option value="" disabled selected>Najpierw wybierz tematykę</option>
             </select>
             <p class="field-error" id="error-pakiet" hidden></p>
-          </label>
-          <label class="form-field" data-field="email">
-            <span>Adres e-mail</span>
+          </div>
+          <div class="form-field" data-field="email">
+            <label for="email">Adres e-mail <span class="req" aria-hidden="true">*</span><span class="visually-hidden"> wymagane</span></label>
             <input
               type="email"
               name="email"
               id="email"
+              required
+              aria-required="true"
               maxlength="120"
               autocomplete="email"
               inputmode="email"
@@ -379,9 +307,9 @@ const jsonLd = [
               aria-describedby="error-email"
             />
             <p class="field-error" id="error-email" hidden></p>
-          </label>
-          <label class="form-field" data-field="telefon">
-            <span>Numer telefonu (opcjonalnie)</span>
+          </div>
+          <div class="form-field" data-field="telefon">
+            <label for="telefon">Numer telefonu (opcjonalnie)</label>
             <div class="phone-input">
               <span class="phone-prefix">+48</span>
               <input
@@ -391,22 +319,23 @@ const jsonLd = [
                 inputmode="numeric"
                 autocomplete="tel-national"
                 maxlength="11"
-                placeholder="000 000 000"
+                placeholder="123 123 123"
                 aria-describedby="error-telefon form-hint-telefon"
               />
             </div>
             <p class="field-error" id="error-telefon" hidden></p>
-          </label>
+          </div>
           <p class="form-hint" id="form-hint-telefon">Numer jest opcjonalny.</p>
-          <label class="form-field" data-field="wiadomosc">
-            <span>Wiadomość</span>
-            <textarea name="wiadomosc" rows="5" maxlength="2000" placeholder="Napisz, czego potrzebujesz i jaki termin Ci pasuje." aria-describedby="error-wiadomosc"></textarea>
+          <div class="form-field" data-field="wiadomosc">
+            <label for="wiadomosc">Wiadomość <span class="req" aria-hidden="true">*</span><span class="visually-hidden"> wymagane</span></label>
+            <textarea id="wiadomosc" name="wiadomosc" rows="5" required aria-required="true" maxlength="2000" placeholder="Napisz, czego potrzebujesz i jaki termin Ci pasuje." aria-describedby="error-wiadomosc"></textarea>
             <p class="field-error" id="error-wiadomosc" hidden></p>
-          </label>
+          </div>
           <p class="form-disclaimer">
-            Klikając <strong>Wyślij zapytanie</strong>, akceptujesz regulamin oraz
-            <a href="/polityka-prywatnosci">Politykę prywatności</a>.
+            Wysyłając zapytanie, prosisz o odpowiedź w sprawie sesji. Zasady przetwarzania danych opisuje
+            <a href="/polityka-prywatnosci">Polityka prywatności</a>.
           </p>
+          <div id="turnstile-slot" class="turnstile-slot"></div>
           <button type="submit" class="btn btn-primary" id="form-submit">Wyślij zapytanie</button>
           <p class="form-success" id="form-success" hidden role="status" aria-live="polite">
             <strong>Wiadomość wysłana.</strong>
@@ -414,10 +343,12 @@ const jsonLd = [
           </p>
           <p class="form-error" id="form-error" hidden role="alert"></p>
           <p class="rodo-note">
-            Administratorem danych jest Obiektyw na Szczęście. Przetwarzamy tematykę, pakiet, adres e-mail i treść wiadomości,
-            a numer telefonu tylko jeśli go podasz. Dane służą obsłudze zapytania. Masz prawo dostępu do danych,
-            ich sprostowania, usunięcia, ograniczenia przetwarzania oraz wniesienia sprzeciwu.
-            Podanie wiadomości jest niezbędne do kontaktu zwrotnego. Szczegóły znajdziesz w
+            Administratorem danych jest Obiektyw na Szczęście. W sprawie danych napisz na
+            <a href={`mailto:${EMAIL_TO}`}>{EMAIL_TO}</a>.
+            Przetwarzamy tematykę, pakiet, adres e-mail i treść wiadomości, a numer telefonu tylko jeśli go podasz,
+            żeby odpowiedzieć na zapytanie (art. 6 ust. 1 lit. b i f RODO).
+            Korespondencję bez współpracy przechowujemy przez 12 miesięcy od ostatniego kontaktu.
+            Szczegóły, w tym odbiorca Web3Forms, są w
             <a href="/polityka-prywatnosci">Polityce prywatności</a>.
           </p>
         </form>

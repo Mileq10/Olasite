@@ -1,6 +1,7 @@
-zgloszenia/
 node_modules/
 dist/
 .astro/
 .cursor/
 .DS_Store
+public/zdjecia/CZYTAJ.txt
+.env

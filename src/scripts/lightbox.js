@@ -4,6 +4,8 @@ export function initLightbox(root = document) {
 
   const items = Array.from(grid.querySelectorAll('[data-index]'));
   if (!items.length) return;
+  if (grid.dataset.ready === '1') return;
+  grid.dataset.ready = '1';
 
   items.forEach((item) => {
     const img = item.querySelector('img');
@@ -43,6 +45,37 @@ export function initLightbox(root = document) {
     preloadImg.src = photo.src;
   }
 
+  function setPageInert(on) {
+    if (!on) {
+      document.querySelectorAll('[data-lightbox-inert]').forEach(function (el) {
+        el.removeAttribute('inert');
+        el.removeAttribute('data-lightbox-inert');
+      });
+      return;
+    }
+
+    const mark = function (el) {
+      if (!el || el === overlay || el.hasAttribute('inert') || el.hasAttribute('data-lightbox-inert')) return;
+      el.setAttribute('inert', '');
+      el.setAttribute('data-lightbox-inert', '');
+    };
+
+    document.querySelectorAll('.site-header, .site-footer').forEach(mark);
+    let node = overlay;
+    while (node && node.parentElement && node !== document.body) {
+      Array.from(node.parentElement.children).forEach(function (el) {
+        if (el !== node) mark(el);
+      });
+      node = node.parentElement;
+    }
+  }
+
+  function focusables() {
+    return [closeBtn, prevBtn, nextBtn].filter(function (el) {
+      return el && !el.hidden;
+    });
+  }
+
   function show(index) {
     current = (index + sources.length) % sources.length;
     const photo = sources[current];
@@ -60,6 +93,7 @@ export function initLightbox(root = document) {
     lastFocused = document.activeElement;
     overlay.hidden = false;
     document.body.classList.add('lightbox-open');
+    setPageInert(true);
     show(index);
     closeBtn?.focus();
   }
@@ -67,6 +101,7 @@ export function initLightbox(root = document) {
   function close() {
     overlay.hidden = true;
     document.body.classList.remove('lightbox-open');
+    setPageInert(false);
     image.removeAttribute('src');
     if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
   }
@@ -98,12 +133,29 @@ export function initLightbox(root = document) {
     if (event.key === 'Escape') {
       event.preventDefault();
       close();
-    } else if (event.key === 'ArrowRight') {
+      return;
+    }
+    if (event.key === 'ArrowRight') {
       event.preventDefault();
       next();
-    } else if (event.key === 'ArrowLeft') {
+      return;
+    }
+    if (event.key === 'ArrowLeft') {
       event.preventDefault();
       prev();
+      return;
+    }
+    if (event.key !== 'Tab') return;
+    const items = focusables();
+    if (!items.length) return;
+    const first = items[0];
+    const last = items[items.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
     }
   });
 
